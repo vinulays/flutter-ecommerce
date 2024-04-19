@@ -53,6 +53,19 @@ class _HomeState extends State<Home> {
                 ),
               ),
               BottomNavigationBarItem(
+                label: "Cart",
+                icon: Image.asset(
+                  "assets/icons/search.png",
+                  height: 27,
+                  width: 27,
+                ),
+                activeIcon: Image.asset(
+                  "assets/icons/shopping-cart-black.png",
+                  height: 27,
+                  width: 27,
+                ),
+              ),
+              BottomNavigationBarItem(
                 label: "Wishlist",
                 icon: Image.asset(
                   "assets/icons/heart.png",
@@ -61,19 +74,6 @@ class _HomeState extends State<Home> {
                 ),
                 activeIcon: Image.asset(
                   "assets/icons/heart-black.png",
-                  height: 27,
-                  width: 27,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: "Cart",
-                icon: Image.asset(
-                  "assets/icons/shopping-cart.png",
-                  height: 27,
-                  width: 27,
-                ),
-                activeIcon: Image.asset(
-                  "assets/icons/shopping-cart-black.png",
                   height: 27,
                   width: 27,
                 ),
