@@ -1,7 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/firebase_options.dart';
+import 'package:flutter_ecommerce/repositories/product_repository.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
+import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
+import 'package:flutter_ecommerce/services/product_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,14 +24,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Ecommerce',
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-          splashColor: Colors.transparent),
-      home: const Home(),
+    return MultiBlocProvider(
+      providers: [
+        // * products bloc provider
+        BlocProvider<ProductsBloc>(
+          create: (context) => ProductsBloc(
+            repository: ProductRepository(
+              productService: ProductService(
+                  firestore: FirebaseFirestore.instance,
+                  storage: FirebaseStorage.instance),
+            ),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Ecommerce',
+        theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+            splashColor: Colors.transparent),
+        home: const Home(),
+      ),
     );
   }
 }

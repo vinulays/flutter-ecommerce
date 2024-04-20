@@ -11,7 +11,7 @@ class ProductService {
       : _firestore = firestore,
         _storage = storage;
 
-  Future<List<Product>> getChallenges() async {
+  Future<List<Product>> getProducts() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
           .collection('challenges')
