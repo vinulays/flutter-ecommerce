@@ -72,19 +72,77 @@ class _DashboardState extends State<Dashboard> {
           Expanded(
             child: ListView(
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: deviceData.size.width * 0.05),
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/images/promo-banner.jpg"),
+                Stack(
+                  children: [
+                    ShaderMask(
+                      blendMode: BlendMode.srcATop,
+                      shaderCallback: (Rect bounds) {
+                        return LinearGradient(
+                          begin: const Alignment(0.01, 0),
+                          end: const Alignment(0.015, 1.1),
+                          colors: [Colors.black.withOpacity(0), Colors.black],
+                        ).createShader(bounds);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: deviceData.size.width * 0.05),
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/images/promo-banner.jpg"),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: 25,
+                      left: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: deviceData.size.width * 0.05),
+                            child: Text(
+                              "Air Jordan 50% Off",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: deviceData.size.width * 0.05),
+                            child: Text(
+                              "Seasonal Offer",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 25,
+                      right: 20,
+                      child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: deviceData.size.width * 0.05),
+                          child: const Icon(
+                            size: 40,
+                            Icons.arrow_right_sharp,
+                            color: Colors.white,
+                          )),
+                    )
+                  ],
                 ),
+
                 const SizedBox(
                   height: 30,
                 ),
