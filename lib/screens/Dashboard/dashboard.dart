@@ -196,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
                   margin: EdgeInsets.symmetric(
                       horizontal: deviceData.size.width * 0.05),
                   child: Wrap(
-                    spacing: 30,
+                    alignment: WrapAlignment.spaceBetween,
                     runSpacing: 10,
                     children: List.generate(6, (index) {
                       return GestureDetector(
