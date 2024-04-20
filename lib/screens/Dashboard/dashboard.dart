@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
@@ -242,7 +239,7 @@ class _DashboardState extends State<Dashboard> {
                           //   padding: EdgeInsets.all(4),
                           //   separator: "",
                           //   duration: Duration(hours: 12),
-                          // )
+                          // ),
                         ],
                       )
                     ],
