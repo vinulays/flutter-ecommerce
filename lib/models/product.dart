@@ -4,6 +4,7 @@ class Product {
   String description;
   double price;
   bool isInStock;
+  String thumbnailURL;
   List<String> imageURLs;
   String categoryId;
   DateTime createdAt;
@@ -15,6 +16,7 @@ class Product {
       required this.description,
       required this.price,
       required this.isInStock,
+      required this.thumbnailURL,
       required this.imageURLs,
       required this.categoryId,
       required this.createdAt,

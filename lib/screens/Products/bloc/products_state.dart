@@ -18,7 +18,11 @@ class ProductsLoaded extends ProductsState {
   List<Object?> get props => [products];
 }
 
-class ProductsLoadingError extends ProductsState {}
+class ProductsLoadingError extends ProductsState {
+  final String errorMessage;
+
+  ProductsLoadingError(this.errorMessage);
+}
 
 class ProductsAdding extends ProductsState {}
 

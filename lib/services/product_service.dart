@@ -14,7 +14,7 @@ class ProductService {
   Future<List<Product>> getProducts() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-          .collection('challenges')
+          .collection('products')
           .orderBy("createdAt", descending: true)
           .get(const GetOptions(source: Source.server));
 
@@ -32,6 +32,7 @@ class ProductService {
                 .toString()), // * converting firebase number format to double format
             categoryId: data["categoryId"],
             isInStock: data["isInStock"],
+            thumbnailURL: data["thumbnailURL"],
             imageURLs: List<String>.from(
               data["imageURLs"],
             ),

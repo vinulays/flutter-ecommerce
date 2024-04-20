@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                   firestore: FirebaseFirestore.instance,
                   storage: FirebaseStorage.instance),
             ),
-          ),
+          )..add(FetchProductsEvent()),
         ),
       ],
       child: MaterialApp(
