@@ -1,5 +1,7 @@
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/screens/Dashboard/dashboard.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,61 +33,87 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
-          iconSize: 30,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+          selectedLabelStyle: GoogleFonts.poppins(),
+          unselectedLabelStyle: GoogleFonts.poppins(),
+          selectedFontSize: 12,
+          // showSelectedLabels: false,
+          // showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               label: "Home",
-              icon: Image.asset(
-                "assets/icons/home.png",
-                height: 27,
-                width: 27,
+              icon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/home.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
-              activeIcon: Image.asset(
-                "assets/icons/home-black.png",
-                height: 27,
-                width: 27,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: "Cart",
-              icon: Image.asset(
-                "assets/icons/search.png",
-                height: 27,
-                width: 27,
-              ),
-              activeIcon: Image.asset(
-                "assets/icons/shopping-cart-black.png",
-                height: 27,
-                width: 27,
+              activeIcon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/home-black.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
             ),
             BottomNavigationBarItem(
               label: "Wishlist",
-              icon: Image.asset(
-                "assets/icons/heart.png",
-                height: 27,
-                width: 27,
+              icon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/heart.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
-              activeIcon: Image.asset(
-                "assets/icons/heart-black.png",
-                height: 27,
-                width: 27,
+              activeIcon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/heart-black.png",
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Cart",
+              icon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/shopping-cart-black.png",
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              activeIcon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/shopping-cart-black.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
             ),
             BottomNavigationBarItem(
               label: "Profile",
-              icon: Image.asset(
-                "assets/icons/user.png",
-                height: 27,
-                width: 27,
+              icon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/user.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
-              activeIcon: Image.asset(
-                "assets/icons/user-black.png",
-                height: 27,
-                width: 27,
+              activeIcon: Container(
+                margin: const EdgeInsets.only(bottom: 5, top: 3),
+                child: Image.asset(
+                  "assets/icons/user-black.png",
+                  height: 24,
+                  width: 24,
+                ),
               ),
             ),
           ],

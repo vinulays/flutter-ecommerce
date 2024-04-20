@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:like_button/like_button.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 class Dashboard extends StatefulWidget {
@@ -36,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
                     Text(
                       "Hi, Vinula👋",
                       style: GoogleFonts.poppins(
-                          fontSize: 28, fontWeight: FontWeight.w700),
+                          fontSize: 25, fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(
                       height: 5,
@@ -52,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
                     Container(
                       margin: const EdgeInsets.only(right: 20),
                       child: Image.asset(
-                        "assets/icons/shopping-cart.png",
+                        "assets/icons/search.png",
                         height: 30,
                         width: 30,
                       ),
@@ -83,7 +86,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 30,
                 ),
                 // * browser categories
                 Container(
@@ -154,7 +157,7 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: productCategories.length),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 35,
                 ),
                 // * Flash sale
                 Container(
@@ -204,16 +207,58 @@ class _DashboardState extends State<Dashboard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // * item thumbnail
-                            Container(
-                              height: 170,
-                              width: 170,
-                              decoration: BoxDecoration(
-                                color: const Color(0xff7279F6),
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  image: AssetImage("assets/images/shoe.png"),
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: 170,
+                                  width: 170,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff7279F6),
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: const DecorationImage(
+                                      image:
+                                          AssetImage("assets/images/shoe.png"),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 3, top: 1, bottom: 1),
+                                      child: LikeButton(
+                                        circleColor: const CircleColor(
+                                            start: Colors.red, end: Colors.red),
+                                        bubblesColor: const BubblesColor(
+                                          dotPrimaryColor: Colors.red,
+                                          dotSecondaryColor: Colors.red,
+                                        ),
+                                        likeBuilder: (bool isLiked) {
+                                          if (isLiked) {
+                                            return const Icon(
+                                              CupertinoIcons.heart_fill,
+                                              color: Colors.red,
+                                              size: 20,
+                                            );
+                                          } else {
+                                            return const Icon(
+                                              CupertinoIcons.heart,
+                                              color: Colors.black,
+                                              size: 20,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             const SizedBox(
                               height: 5,
