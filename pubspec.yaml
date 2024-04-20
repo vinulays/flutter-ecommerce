@@ -72,6 +72,10 @@ flutter:
     - assets/icons/search.png
     - assets/images/promo-banner.jpg
     - assets/images/shoe.png
+    - assets/images/headphone.png
+    - assets/images/watch.png
+    - assets/images/tshirt.png
+    - assets/images/chair.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

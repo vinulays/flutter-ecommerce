@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
@@ -122,8 +122,12 @@ class _DashboardState extends State<Dashboard> {
                           decoration: const BoxDecoration(
                             color: Color(0xffF5F5FF),
                             shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/shoe.png"),
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              productCategories[index].iconURL,
+                              height: 45,
+                              width: 45,
                             ),
                           ),
                         ),
@@ -131,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
                           height: 5,
                         ),
                         Text(
-                          "Shoes",
+                          productCategories[index].name,
                           style:
                               GoogleFonts.poppins(fontWeight: FontWeight.w500),
                         )
@@ -142,7 +146,7 @@ class _DashboardState extends State<Dashboard> {
                 separatorBuilder: (contetx, _) => const SizedBox(
                       width: 25,
                     ),
-                itemCount: 8),
+                itemCount: productCategories.length),
           ),
           const SizedBox(
             height: 20,
@@ -166,11 +170,12 @@ class _DashboardState extends State<Dashboard> {
                       style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(
-                      width: 5,
+                      width: 7,
                     ),
-                    SlideCountdownSeparated(
-                      separator: " ",
-                      duration: const Duration(hours: 12),
+                    const SlideCountdownSeparated(
+                      padding: EdgeInsets.all(4),
+                      separator: "",
+                      duration: Duration(hours: 12),
                     )
                   ],
                 )
