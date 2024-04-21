@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
+import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/ProductDetails/product_details.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
 
@@ -11,6 +14,14 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        context
+            .read<ProductDetailsBloc>()
+            .add(FetchProductDetailsEvent(product.id!));
+
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ProductDetails()));
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -95,6 +106,5 @@ class ProductCard extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

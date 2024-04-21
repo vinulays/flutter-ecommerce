@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/firebase_options.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
+import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
 
@@ -35,6 +36,16 @@ class MyApp extends StatelessWidget {
                   storage: FirebaseStorage.instance),
             ),
           )..add(FetchProductsEvent()),
+        ),
+        // * product details bloc provider
+        BlocProvider<ProductDetailsBloc>(
+          create: (context) => ProductDetailsBloc(
+            productRepository: ProductRepository(
+              productService: ProductService(
+                  firestore: FirebaseFirestore.instance,
+                  storage: FirebaseStorage.instance),
+            ),
+          ),
         ),
       ],
       child: MaterialApp(
