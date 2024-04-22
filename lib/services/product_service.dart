@@ -14,7 +14,7 @@ class ProductService {
   Future<List<Product>> getProducts() async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
-          .collection('challenges')
+          .collection('products')
           .orderBy("createdAt", descending: true)
           .get(const GetOptions(source: Source.server));
 
@@ -24,25 +24,65 @@ class ProductService {
         Map<String, dynamic> data = doc.data();
 
         Product product = Product(
-            id: doc.id,
-            title: data['title'],
-            description: data['description'],
-            price: double.parse(data["price"].toString()),
-            rating: double.parse(data['rating']
-                .toString()), // * converting firebase number format to double format
-            categoryId: data["categoryId"],
-            isInStock: data["isInStock"],
-            imageURLs: List<String>.from(
-              data["imageURLs"],
-            ),
-            createdAt: data["createdAt"].toDate());
+          id: doc.id,
+          title: data['title'],
+          description: data['description'],
+          price: double.parse(data["price"].toString()),
+          rating: double.parse(data['rating']
+              .toString()), // * converting firebase number format to double format
+          categoryId: data["categoryId"],
+          isInStock: data["isInStock"],
+          thumbnailURL: data["thumbnailURL"],
+          imageURLs: List<String>.from(
+            data["imageURLs"],
+          ),
+          createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
+        );
 
         products.add(product);
       }
 
       return products;
     } catch (e) {
-      throw Exception('Failed to fetch challenges: $e');
+      throw Exception('Failed to fetch products: $e');
+    }
+  }
+
+  Future<Product> getProductById(String productId) async {
+    try {
+      DocumentSnapshot productDoc =
+          await _firestore.collection('products').doc(productId).get();
+
+      if (productDoc.exists) {
+        Map<String, dynamic> data = productDoc.data() as Map<String, dynamic>;
+
+        Product challenge = Product(
+          id: productDoc.id,
+          title: data['title'],
+          description: data['description'],
+          price: double.parse(data["price"].toString()),
+          rating: double.parse(data['rating']
+              .toString()), // * converting firebase number format to double format
+          categoryId: data["categoryId"],
+          isInStock: data["isInStock"],
+          thumbnailURL: data["thumbnailURL"],
+          imageURLs: List<String>.from(
+            data["imageURLs"],
+          ),
+          createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
+        );
+
+        return challenge;
+      } else {
+        throw Exception('Challenge with id $productId not found');
+      }
+    } catch (e) {
+      // Handle errors if any
+      throw Exception('Failed to get product: $e');
     }
   }
 }

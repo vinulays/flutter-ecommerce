@@ -20,7 +20,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         final products = await _productRepository.getProducts();
         emit(ProductsLoaded(products));
       } catch (e) {
-        emit(ProductsLoadingError());
+        emit(ProductsLoadingError("failed to fetch products: $e"));
       }
     });
   }
