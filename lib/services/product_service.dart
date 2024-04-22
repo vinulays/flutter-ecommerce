@@ -58,7 +58,7 @@ class ProductService {
       if (productDoc.exists) {
         Map<String, dynamic> data = productDoc.data() as Map<String, dynamic>;
 
-        Product challenge = Product(
+        Product product = Product(
           id: productDoc.id,
           title: data['title'],
           description: data['description'],
@@ -76,13 +76,53 @@ class ProductService {
           colors: List<String>.from(data["colors"]),
         );
 
-        return challenge;
+        return product;
       } else {
         throw Exception('Challenge with id $productId not found');
       }
     } catch (e) {
       // Handle errors if any
       throw Exception('Failed to get product: $e');
+    }
+  }
+
+  Future<List<Product>> getProductsByCategoryId(String categoryId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('products')
+          .where('categoryId', isEqualTo: categoryId)
+          .get(const GetOptions(source: Source.server));
+
+      List<Product> products = [];
+
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        Product product = Product(
+          id: doc.id,
+          title: data['title'],
+          description: data['description'],
+          price: double.parse(data["price"].toString()),
+          rating: double.parse(data['rating']
+              .toString()), // * converting firebase number format to double format
+          categoryId: data["categoryId"],
+          isInStock: data["isInStock"],
+          thumbnailURL: data["thumbnailURL"],
+          imageURLs: List<String>.from(
+            data["imageURLs"],
+          ),
+          createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
+        );
+
+        products.add(product);
+      }
+
+      return products;
+    } catch (e) {
+      // Handle errors if any
+      throw Exception('Failed to get products by the category: $e');
     }
   }
 }

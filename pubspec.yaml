@@ -47,6 +47,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   flutter_rating_bar: ^4.0.1
   readmore: ^3.0.0
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,7 @@ flutter:
     - assets/icons/user-black.png
     - assets/icons/search.png
     - assets/images/promo-banner.jpg
+    - assets/images/headphone-banner.jpg
     - assets/images/shoe.png
     - assets/images/headphone.png
     - assets/images/watch.png

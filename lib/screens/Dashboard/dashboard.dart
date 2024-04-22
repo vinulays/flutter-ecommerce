@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/CategoryDetails/category_details.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
@@ -178,6 +181,20 @@ class _DashboardState extends State<Dashboard> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return GestureDetector(
+                          onTap: () {
+                            context.read<CategoryDetailsBloc>().add(
+                                FetchCategoryDetailsEvent(
+                                    productCategories[index].id));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CategoryDetails(
+                                          categoryName:
+                                              productCategories[index].name,
+                                          bannerURL: productCategories[index]
+                                              .bannerURL,
+                                        )));
+                          },
                           child: Column(
                             children: [
                               Container(
