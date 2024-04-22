@@ -5,7 +5,7 @@ class HelperFunctions {
     if (value == "white") {
       return Colors.white;
     } else if (value == "black") {
-      return Colors.black;
+      return Colors.black.withOpacity(0.35);
     } else if (value == "blue") {
       return Colors.blue;
     } else if (value == "green") {

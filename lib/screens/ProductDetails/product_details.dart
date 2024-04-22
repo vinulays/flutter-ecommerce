@@ -259,6 +259,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   Text(
                                     "Choose Size",
                                     style: GoogleFonts.poppins(
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w700),
                                   ),
                                   const SizedBox(
@@ -307,13 +308,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   Text(
                                     "Choose Color",
                                     style: GoogleFonts.poppins(
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w700),
                                   ),
                                   const SizedBox(
                                     height: 5,
                                   ),
                                   Wrap(
-                                    spacing: 5,
+                                    spacing: 3,
                                     children: List.generate(
                                         product!.colors.length, (index) {
                                       return Theme(
@@ -331,6 +333,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   product!.colors[index]),
                                           shape: CircleBorder(
                                               side: BorderSide(
+                                                  width: 2,
                                                   color: (colorValue != index)
                                                       ? Colors.grey
                                                           .withOpacity(0.2)
