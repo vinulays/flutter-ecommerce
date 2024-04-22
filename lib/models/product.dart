@@ -9,6 +9,8 @@ class Product {
   String categoryId;
   DateTime createdAt;
   double rating;
+  List<String> sizes;
+  List<String> colors;
 
   Product(
       {this.id,
@@ -20,5 +22,7 @@ class Product {
       required this.imageURLs,
       required this.categoryId,
       required this.createdAt,
-      required this.rating});
+      required this.rating,
+      required this.sizes,
+      required this.colors});
 }

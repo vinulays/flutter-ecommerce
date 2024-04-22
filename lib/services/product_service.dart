@@ -37,6 +37,8 @@ class ProductService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
         );
 
         products.add(product);
@@ -70,6 +72,8 @@ class ProductService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
         );
 
         return challenge;
