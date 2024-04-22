@@ -1,9 +1,11 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -44,6 +46,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
               ? Stack(
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Stack(
                           children: [
@@ -152,6 +155,23 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                             ],
                           ),
                         ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        // * category items
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: deviceSize.width * 0.05),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runSpacing: 10,
+                            children:
+                                List.generate(state.products.length, (index) {
+                              return ProductCard(
+                                  product: state.products[index]);
+                            }),
+                          ),
+                        )
                       ],
                     ),
                     Positioned.fill(
@@ -194,6 +214,72 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                         ),
                       ),
                     ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          margin: const EdgeInsets.all(30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      bottomLeft: Radius.circular(30),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                          Icons.filter_alt_outlined,
+                                          color: Colors.black),
+                                      label: Text(
+                                        "Add Filter",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(30),
+                                      bottomRight: Radius.circular(30),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.shopping_cart_outlined,
+                                        color: Colors.white,
+                                      ),
+                                      label: Text(
+                                        "Cart Empty",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 )
               : (state is CategoryLoading)
