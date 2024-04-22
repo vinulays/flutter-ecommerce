@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
@@ -22,8 +19,8 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   final controller = PageController(keepPage: true);
-  int? value = 0;
-  int? colorValue = 0;
+  int? value;
+  int? colorValue;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +28,10 @@ class _ProductDetailsState extends State<ProductDetails> {
     Product? product;
 
     List<Container> pages = [];
+
+    bool isButtonDisable() {
+      return value == null || colorValue == null;
+    }
 
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
@@ -346,10 +347,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         padding: MaterialStateProperty.all(
                                             const EdgeInsets.symmetric(
                                                 horizontal: 30, vertical: 15)),
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.black)),
-                                    onPressed: () {},
+                                        backgroundColor: !isButtonDisable()
+                                            ? MaterialStateProperty.all(
+                                                Colors.black)
+                                            : MaterialStateProperty.all(
+                                                Colors.black.withOpacity(0.3))),
+                                    onPressed: isButtonDisable() ? null : () {},
                                     icon: const Icon(
                                       Icons.shopping_cart_outlined,
                                       color: Colors.white,
