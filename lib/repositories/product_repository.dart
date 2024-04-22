@@ -14,4 +14,8 @@ class ProductRepository {
   Future<Product> getProductById(String productId) async {
     return _productService.getProductById(productId);
   }
+
+  Future<List<Product>> getProductsByCategoryId(String categoryId) async {
+    return _productService.getProductsByCategoryId(categoryId);
+  }
 }
