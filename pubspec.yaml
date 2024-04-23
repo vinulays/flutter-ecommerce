@@ -48,6 +48,9 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   readmore: ^3.0.0
   dropdown_button2: ^2.3.9
+  flutter_svg: ^2.0.10+1
+  cached_network_image: ^3.3.1
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +80,10 @@ flutter:
     - assets/icons/heart.png
     - assets/icons/heart-black.png
     - assets/icons/shopping-cart.png
+    - assets/icons/shopping-cart.svg
+    - assets/icons/home.svg
+    - assets/icons/heart.svg
+    - assets/icons/user.svg
     - assets/icons/shopping-cart-black.png
     - assets/icons/user.png
     - assets/icons/user-black.png
