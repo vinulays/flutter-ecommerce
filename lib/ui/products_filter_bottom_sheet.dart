@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductsFilterBottomSheet extends StatefulWidget {
-  const ProductsFilterBottomSheet({super.key});
+  final Function(String, RangeValues) applyFiltersCallBack;
+  final String initialAvailabilitySelected;
+  final RangeValues initialRangeValues;
+
+  const ProductsFilterBottomSheet(
+      {super.key,
+      required this.initialAvailabilitySelected,
+      required this.initialRangeValues,
+      required this.applyFiltersCallBack});
 
   @override
   State<ProductsFilterBottomSheet> createState() =>
@@ -14,6 +20,13 @@ class ProductsFilterBottomSheet extends StatefulWidget {
 class _ProductsFilterBottomSheetState extends State<ProductsFilterBottomSheet> {
   String selectedAvailability = "";
   RangeValues currentRangeValues = const RangeValues(100, 350);
+
+  @override
+  void initState() {
+    super.initState();
+    selectedAvailability = widget.initialAvailabilitySelected;
+    currentRangeValues = widget.initialRangeValues;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,13 +195,10 @@ class _ProductsFilterBottomSheetState extends State<ProductsFilterBottomSheet> {
                         padding: const EdgeInsets.all(8.0),
                         child: TextButton.icon(
                           onPressed: () {
-                            showModalBottomSheet(
-                                shape: const RoundedRectangleBorder(),
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return const ProductsFilterBottomSheet();
-                                });
+                            setState(() {
+                              selectedAvailability = "";
+                              currentRangeValues = const RangeValues(0, 500);
+                            });
                           },
                           icon: const Icon(Icons.close, color: Colors.black),
                           label: Text(
@@ -214,35 +224,21 @@ class _ProductsFilterBottomSheetState extends State<ProductsFilterBottomSheet> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.done,
-                            color: Colors.white,
-                          ),
-                          label:
-                              BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
-                            builder: (context, state) {
-                              if (state is ShoppingCartLoadedState) {
-                                if (state.cart.items.isNotEmpty) {
-                                  return Text(
-                                    "Cart ${state.cart.items.length}",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  );
-                                } else {
-                                  return Text(
-                                    "Confirm",
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500),
-                                  );
-                                }
-                              }
-                              return Container();
+                            onPressed: () {
+                              widget.applyFiltersCallBack(
+                                  selectedAvailability, currentRangeValues);
+                              Navigator.of(context).pop();
                             },
-                          ),
-                        ),
+                            icon: const Icon(
+                              Icons.done,
+                              color: Colors.white,
+                            ),
+                            label: Text(
+                              "Confirm",
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            )),
                       ),
                     ),
                   ),

@@ -25,7 +25,37 @@ class CategoryDetails extends StatefulWidget {
 class _CategoryDetailsState extends State<CategoryDetails> {
   String? selectedValue = "All items";
   List<Product> products = [];
+  List<Product> productsCopy = [];
   bool productsFetched = false;
+
+  String selectedAvailability = "";
+  RangeValues selectedRangeValues = const RangeValues(100, 350);
+
+  void applyFilters(String availability, RangeValues rangeValues) {
+    setState(() {
+      selectedAvailability = availability;
+      selectedRangeValues = rangeValues;
+    });
+
+    // * Filtering by availability
+
+    products = productsCopy.where((product) {
+      if (selectedAvailability == "In Stock") {
+        return product.isInStock;
+      } else if (selectedAvailability == "Out of Stock") {
+        return !product.isInStock;
+      }
+      return true;
+    }).toList();
+
+    // * Filtering by price range
+    products = products.where((product) {
+      return product.price >= rangeValues.start &&
+          product.price <= rangeValues.end;
+    }).toList();
+
+    selectedValue = "All items";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +72,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       builder: (context, state) {
         if (state is CategoryLoaded && !productsFetched) {
           products = state.products;
+          productsCopy = state.products;
+
           productsFetched = true;
         }
 
@@ -270,7 +302,14 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                                 Clip.antiAliasWithSaveLayer,
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return const ProductsFilterBottomSheet();
+                                              return ProductsFilterBottomSheet(
+                                                initialAvailabilitySelected:
+                                                    selectedAvailability,
+                                                initialRangeValues:
+                                                    selectedRangeValues,
+                                                applyFiltersCallBack:
+                                                    applyFilters,
+                                              );
                                             });
                                       },
                                       icon: const Icon(
