@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -299,11 +300,31 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                         Icons.shopping_cart_outlined,
                                         color: Colors.white,
                                       ),
-                                      label: Text(
-                                        "Cart Empty",
-                                        style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500),
+                                      label: BlocBuilder<ShoppingCartBloc,
+                                          ShoppingCartState>(
+                                        builder: (context, state) {
+                                          if (state
+                                              is ShoppingCartLoadedState) {
+                                            if (state.cart.items.isNotEmpty) {
+                                              return Text(
+                                                "Cart ${state.cart.items.length}",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              );
+                                            } else {
+                                              return Text(
+                                                "Cart Empty",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              );
+                                            }
+                                          }
+                                          return Container();
+                                        },
                                       ),
                                     ),
                                   ),
