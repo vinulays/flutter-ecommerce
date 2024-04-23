@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/ui/cart_item_card.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShoppingCart extends StatefulWidget {
-  const ShoppingCart({super.key});
+  final String fromWhere;
+  const ShoppingCart({super.key, required this.fromWhere});
 
   @override
   State<ShoppingCart> createState() => _ShoppingCartState();
@@ -38,21 +38,22 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     horizontal: deviceData.size.width * 0.05),
                 child: Row(
                   children: [
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   // child: SvgPicture.asset(
-                    //   //   "assets/icons/go_back.svg",
-                    //   //   colorFilter: const ColorFilter.mode(
-                    //   //       Colors.black, BlendMode.srcIn),
-                    //   // ),
-                    //   child: const Icon(
-                    //     Icons.chevron_left_outlined,
-                    //     size: 30,
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 10),
+                    if (widget.fromWhere != "home")
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        // child: SvgPicture.asset(
+                        //   "assets/icons/go_back.svg",
+                        //   colorFilter: const ColorFilter.mode(
+                        //       Colors.black, BlendMode.srcIn),
+                        // ),
+                        child: const Icon(
+                          Icons.chevron_left_outlined,
+                          size: 30,
+                        ),
+                      ),
+                    if (widget.fromWhere != "home") const SizedBox(width: 10),
                     Text("Shopping Cart",
                         style: GoogleFonts.poppins(
                             color: Colors.black,
@@ -103,7 +104,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     ),
                     if (state is ShoppingCartLoadedState)
                       Text(
-                        "LKR ${state.cart.total.toStringAsFixed(2)}",
+                        "\$${state.cart.total.toStringAsFixed(2)}",
                         style: GoogleFonts.poppins(
                             fontSize: 19, fontWeight: FontWeight.w700),
                       ),

@@ -153,7 +153,7 @@ class _CartItemCardState extends State<CartItemCard> {
                   ),
                 ),
                 Text(
-                  "LKR ${widget.cartItem.price.toStringAsFixed(2)}",
+                  "\$${widget.cartItem.price.toStringAsFixed(2)}",
                   style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,6 +22,8 @@ class CategoryDetails extends StatefulWidget {
 
 class _CategoryDetailsState extends State<CategoryDetails> {
   String? selectedValue = "All items";
+  List<Product> products = [];
+  bool productsFetched = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +36,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       'Price: Low to High',
     ];
 
-    List<Product> products = [];
-
     return BlocBuilder<CategoryDetailsBloc, CategoryDetailsState>(
       builder: (context, state) {
-        if (state is CategoryLoaded) {
+        if (state is CategoryLoaded && !productsFetched) {
           products = state.products;
+          productsFetched = true;
         }
 
         return Scaffold(
@@ -109,6 +111,31 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   onChanged: (value) {
                                     setState(() {
                                       selectedValue = value;
+                                      if (selectedValue ==
+                                          'Price: Low to High') {
+                                        products = state.products;
+                                        products.sort((a, b) =>
+                                            a.price.compareTo(b.price));
+                                      } else if (selectedValue ==
+                                          'Price: High to Low') {
+                                        products = state.products;
+
+                                        products.sort((a, b) =>
+                                            b.price.compareTo(a.price));
+                                      } else if (selectedValue ==
+                                          "New Arrival") {
+                                        products =
+                                            state.products.where((product) {
+                                          final currentDate = DateTime.now();
+                                          final differenceInDays = currentDate
+                                              .difference(product.createdAt)
+                                              .inDays;
+                                          return differenceInDays <= 4;
+                                        }).toList();
+                                      } else if (selectedValue == 'All items') {
+                                        // * Show all products
+                                        products = state.products;
+                                      }
                                     });
                                   },
                                   buttonStyleData: ButtonStyleData(
@@ -160,15 +187,14 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                         ),
                         // * category items
                         Container(
+                          width: double.infinity,
                           margin: EdgeInsets.symmetric(
                               horizontal: deviceSize.width * 0.05),
                           child: Wrap(
                             alignment: WrapAlignment.spaceBetween,
                             runSpacing: 10,
-                            children:
-                                List.generate(state.products.length, (index) {
-                              return ProductCard(
-                                  product: state.products[index]);
+                            children: List.generate(products.length, (index) {
+                              return ProductCard(product: products[index]);
                             }),
                           ),
                         )
@@ -260,7 +286,15 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ShoppingCart(
+                                                      fromWhere: "category",
+                                                    )));
+                                      },
                                       icon: const Icon(
                                         Icons.shopping_cart_outlined,
                                         color: Colors.white,

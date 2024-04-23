@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Dashboard/dashboard.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
+import 'package:flutter_ecommerce/screens/Wishlist/wishlist.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:badges/badges.dart' as badges;
@@ -20,8 +21,10 @@ class _HomeState extends State<Home> {
   static const List<Widget> _widgetOptions = <Widget>[
     // * Add appropriate screens as commented below
     Dashboard(),
-    Dashboard(),
-    ShoppingCart(),
+    Wishlist(),
+    ShoppingCart(
+      fromWhere: "home",
+    ),
     Dashboard(),
 
     // * Notifications

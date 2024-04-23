@@ -51,6 +51,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   cached_network_image: ^3.3.1
   badges: ^3.1.2
+  firebase_auth: ^4.19.2
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +91,9 @@ flutter:
     - assets/icons/search.png
     - assets/images/promo-banner.jpg
     - assets/images/headphone-banner.jpg
+    - assets/images/watch-banner.jpg
+    - assets/images/shirt-banner.jpg
+    - assets/images/lifestyle-banner.jpg
     - assets/images/shoe.png
     - assets/images/headphone.png
     - assets/images/watch.png

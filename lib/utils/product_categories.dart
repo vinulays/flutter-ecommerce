@@ -15,15 +15,15 @@ List<ProductCategory> productCategories = [
       id: "3",
       name: "Accessories",
       iconURL: "assets/images/watch.png",
-      bannerURL: "assets/images/promo-banner.jpg"),
+      bannerURL: "assets/images/watch-banner.jpg"),
   ProductCategory(
       id: "4",
       name: "Clothes",
       iconURL: "assets/images/tshirt.png",
-      bannerURL: "assets/images/promo-banner.jpg"),
+      bannerURL: "assets/images/shirt-banner.jpg"),
   ProductCategory(
       id: "5",
       name: "Lifestyle",
       iconURL: "assets/images/chair.png",
-      bannerURL: "assets/images/promo-banner.jpg"),
+      bannerURL: "assets/images/lifestyle-banner.jpg"),
 ];
