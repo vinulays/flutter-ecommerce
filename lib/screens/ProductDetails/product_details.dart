@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/models/cart_item.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/utils/helper_functions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -352,7 +354,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 Colors.black)
                                             : MaterialStateProperty.all(
                                                 Colors.black.withOpacity(0.3))),
-                                    onPressed: isButtonDisable() ? null : () {},
+                                    onPressed: isButtonDisable()
+                                        ? null
+                                        : () {
+                                            context
+                                                .read<ShoppingCartBloc>()
+                                                .add(
+                                                  AddItemEvent(
+                                                    CartItem(
+                                                        name: product!.title,
+                                                        price: product!.price,
+                                                        imageUrl: product!
+                                                            .thumbnailURL,
+                                                        quantity: 1,
+                                                        size: product!
+                                                            .sizes[value!],
+                                                        color: product!.colors[
+                                                            colorValue!]),
+                                                  ),
+                                                );
+                                          },
                                     icon: const Icon(
                                       Icons.shopping_cart_outlined,
                                       color: Colors.white,

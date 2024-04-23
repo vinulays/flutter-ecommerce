@@ -4,11 +4,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/firebase_options.dart';
+import 'package:flutter_ecommerce/repositories/cart_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/services/cart_service.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
 
 void main() async {
@@ -55,6 +58,14 @@ class MyApp extends StatelessWidget {
               productService: ProductService(
                   firestore: FirebaseFirestore.instance,
                   storage: FirebaseStorage.instance),
+            ),
+          ),
+        ),
+        // * shopping cart bloc provider
+        BlocProvider<ShoppingCartBloc>(
+          create: (context) => ShoppingCartBloc(
+            cartRepository: CartRepository(
+              cartService: CartService(),
             ),
           ),
         ),
