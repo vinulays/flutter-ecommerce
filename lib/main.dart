@@ -8,6 +8,7 @@ import 'package:flutter_ecommerce/repositories/cart_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
+import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
             useMaterial3: true,
             splashColor: Colors.transparent),
-        home: const Home(),
+        home: const Login(),
       ),
     );
   }

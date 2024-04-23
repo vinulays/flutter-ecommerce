@@ -89,6 +89,8 @@ flutter:
     - assets/icons/user.png
     - assets/icons/user-black.png
     - assets/icons/search.png
+    - assets/icons/google.svg
+    - assets/icons/facebook.svg
     - assets/images/promo-banner.jpg
     - assets/images/headphone-banner.jpg
     - assets/images/watch-banner.jpg
