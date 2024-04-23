@@ -5,8 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
+import 'package:flutter_ecommerce/ui/products_filter_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -23,7 +25,37 @@ class CategoryDetails extends StatefulWidget {
 class _CategoryDetailsState extends State<CategoryDetails> {
   String? selectedValue = "All items";
   List<Product> products = [];
+  List<Product> productsCopy = [];
   bool productsFetched = false;
+
+  String selectedAvailability = "";
+  RangeValues selectedRangeValues = const RangeValues(100, 350);
+
+  void applyFilters(String availability, RangeValues rangeValues) {
+    setState(() {
+      selectedAvailability = availability;
+      selectedRangeValues = rangeValues;
+    });
+
+    // * Filtering by availability
+
+    products = productsCopy.where((product) {
+      if (selectedAvailability == "In Stock") {
+        return product.isInStock;
+      } else if (selectedAvailability == "Out of Stock") {
+        return !product.isInStock;
+      }
+      return true;
+    }).toList();
+
+    // * Filtering by price range
+    products = products.where((product) {
+      return product.price >= rangeValues.start &&
+          product.price <= rangeValues.end;
+    }).toList();
+
+    selectedValue = "All items";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +72,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
       builder: (context, state) {
         if (state is CategoryLoaded && !productsFetched) {
           products = state.products;
+          productsCopy = state.products;
+
           productsFetched = true;
         }
 
@@ -260,7 +294,24 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            shape:
+                                                const RoundedRectangleBorder(),
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return ProductsFilterBottomSheet(
+                                                initialAvailabilitySelected:
+                                                    selectedAvailability,
+                                                initialRangeValues:
+                                                    selectedRangeValues,
+                                                applyFiltersCallBack:
+                                                    applyFilters,
+                                              );
+                                            });
+                                      },
                                       icon: const Icon(
                                           Icons.filter_alt_outlined,
                                           color: Colors.black),
@@ -299,11 +350,31 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                         Icons.shopping_cart_outlined,
                                         color: Colors.white,
                                       ),
-                                      label: Text(
-                                        "Cart Empty",
-                                        style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500),
+                                      label: BlocBuilder<ShoppingCartBloc,
+                                          ShoppingCartState>(
+                                        builder: (context, state) {
+                                          if (state
+                                              is ShoppingCartLoadedState) {
+                                            if (state.cart.items.isNotEmpty) {
+                                              return Text(
+                                                "Cart ${state.cart.items.length}",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              );
+                                            } else {
+                                              return Text(
+                                                "Cart Empty",
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              );
+                                            }
+                                          }
+                                          return Container();
+                                        },
                                       ),
                                     ),
                                   ),
