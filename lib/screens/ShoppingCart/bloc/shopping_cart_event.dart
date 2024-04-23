@@ -17,20 +17,26 @@ class AddItemEvent extends ShoppingCartEvent {
 
 class RemoveItemEvent extends ShoppingCartEvent {
   final String itemName;
+  final String itemColor;
+  final String itemSize;
 
-  RemoveItemEvent(this.itemName);
+  RemoveItemEvent(this.itemName, this.itemColor, this.itemSize);
 }
 
 class AddItemQuantityEvent extends ShoppingCartEvent {
   final String itemName;
+  final String itemColor;
+  final String itemSize;
 
-  AddItemQuantityEvent(this.itemName);
+  AddItemQuantityEvent(this.itemName, this.itemColor, this.itemSize);
 }
 
 class RemoveItemQuantityEvent extends ShoppingCartEvent {
   final String itemName;
+  final String itemColor;
+  final String itemSize;
 
-  RemoveItemQuantityEvent(this.itemName);
+  RemoveItemQuantityEvent(this.itemName, this.itemColor, this.itemSize);
 }
 
 class UpdateItemQuantityEvent extends ShoppingCartEvent {

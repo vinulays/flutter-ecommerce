@@ -10,16 +10,16 @@ class CartService {
   }
 
   // * Remove an item from the cart
-  void removeItemFromCart(String itemName) {
-    cart.removeItem(itemName);
+  void removeItemFromCart(String itemName, String color, String size) {
+    cart.removeItem(itemName, color, size);
   }
 
-  void addItemQuantity(String itemName) {
-    cart.addItemQuantity(itemName);
+  void addItemQuantity(String itemName, String color, String size) {
+    cart.addItemQuantity(itemName, color, size);
   }
 
-  void removeItemQuantity(String itemName) {
-    cart.removeItemQuantity(itemName);
+  void removeItemQuantity(String itemName, String color, String size) {
+    cart.removeItemQuantity(itemName, color, size);
   }
 
   // * Update the quantity of an item in the cart

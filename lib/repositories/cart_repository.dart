@@ -13,18 +13,18 @@ class CartRepository {
   }
 
   // * Remove an item from the cart
-  void removeItemFromCart(String itemName) {
-    cartService.removeItemFromCart(itemName);
+  void removeItemFromCart(String itemName, String color, String size) {
+    cartService.removeItemFromCart(itemName, color, size);
   }
 
   // * Add item quantity in the cart
-  void addItemQuantity(String itemName) {
-    cartService.addItemQuantity(itemName);
+  void addItemQuantity(String itemName, String color, String size) {
+    cartService.addItemQuantity(itemName, color, size);
   }
 
   // * Remove item quantity in the cart
-  void removeItemQuantity(String itemName) {
-    cartService.removeItemQuantity(itemName);
+  void removeItemQuantity(String itemName, String color, String size) {
+    cartService.removeItemQuantity(itemName, color, size);
   }
 
   // * Update the quantity of an item in the cart

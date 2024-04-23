@@ -95,7 +95,9 @@ class _CartItemCardState extends State<CartItemCard> {
                                 onTap: () {
                                   context.read<ShoppingCartBloc>().add(
                                       RemoveItemQuantityEvent(
-                                          widget.cartItem.name));
+                                          widget.cartItem.name,
+                                          widget.cartItem.color,
+                                          widget.cartItem.size));
                                 },
                                 child: const Icon(Icons.remove_circle_outline),
                               ),
@@ -116,7 +118,9 @@ class _CartItemCardState extends State<CartItemCard> {
                                 onTap: () {
                                   context.read<ShoppingCartBloc>().add(
                                       AddItemQuantityEvent(
-                                          widget.cartItem.name));
+                                          widget.cartItem.name,
+                                          widget.cartItem.color,
+                                          widget.cartItem.size));
                                 },
                                 child: const Icon(Icons.add_circle_outline),
                               ),
@@ -138,9 +142,10 @@ class _CartItemCardState extends State<CartItemCard> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    context
-                        .read<ShoppingCartBloc>()
-                        .add(RemoveItemEvent(widget.cartItem.name));
+                    context.read<ShoppingCartBloc>().add(RemoveItemEvent(
+                        widget.cartItem.name,
+                        widget.cartItem.color,
+                        widget.cartItem.size));
                   },
                   child: const Icon(
                     Icons.delete,

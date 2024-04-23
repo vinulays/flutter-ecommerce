@@ -31,7 +31,8 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
       emit(CartItemRemoving());
 
       try {
-        _cartRepository.removeItemFromCart(event.itemName);
+        _cartRepository.removeItemFromCart(
+            event.itemName, event.itemColor, event.itemSize);
         emit(CartItemRemoved());
 
         emit(ShoppingCartLoadedState(_cartRepository.getCart()));
@@ -43,7 +44,8 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
     on<AddItemQuantityEvent>((event, emit) {
       emit(CartItemQuantityAdding());
       try {
-        _cartRepository.addItemQuantity(event.itemName);
+        _cartRepository.addItemQuantity(
+            event.itemName, event.itemColor, event.itemSize);
         emit(CartItemQuantityAdded());
 
         emit(ShoppingCartLoadedState(_cartRepository.getCart()));
@@ -55,7 +57,8 @@ class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
     on<RemoveItemQuantityEvent>((event, emit) {
       emit(CartItemQuantityRemoving());
       try {
-        _cartRepository.removeItemQuantity(event.itemName);
+        _cartRepository.removeItemQuantity(
+            event.itemName, event.itemColor, event.itemSize);
         emit(CartItemQuantityRemoved());
 
         emit(ShoppingCartLoadedState(_cartRepository.getCart()));

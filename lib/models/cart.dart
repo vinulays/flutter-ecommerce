@@ -18,7 +18,10 @@ class Cart {
   void addItem(CartItem newItem) {
     // * Check if item already exists in cart
     var existingItem = items.firstWhere(
-      (item) => item.name == newItem.name,
+      (item) =>
+          item.name == newItem.name &&
+          item.color == newItem.color &&
+          item.size == newItem.size,
       orElse: () => CartItem(
           name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
     );
@@ -35,15 +38,19 @@ class Cart {
     _updateTotal();
   }
 
-  void removeItem(String itemName) {
-    items.removeWhere((item) => item.name == itemName);
+  void removeItem(String itemName, String color, String size) {
+    items.removeWhere(
+      (item) =>
+          item.name == itemName && item.color == color && item.size == size,
+    );
     _updateSubTotal();
     _updateTotal();
   }
 
-  void addItemQuantity(String itemName) {
+  void addItemQuantity(String itemName, String color, String size) {
     var existingItem = items.firstWhere(
-      (item) => item.name == itemName,
+      (item) =>
+          item.name == itemName && item.color == color && item.size == size,
       orElse: () => CartItem(
           name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
     );
@@ -55,9 +62,10 @@ class Cart {
     }
   }
 
-  void removeItemQuantity(String itemName) {
+  void removeItemQuantity(String itemName, String color, String size) {
     var existingItem = items.firstWhere(
-      (item) => item.name == itemName,
+      (item) =>
+          item.name == itemName && item.color == color && item.size == size,
       orElse: () => CartItem(
           name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
     );
