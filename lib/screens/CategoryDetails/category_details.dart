@@ -8,6 +8,7 @@ import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
+import 'package:flutter_ecommerce/ui/products_filter_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -261,7 +262,17 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            shape:
+                                                const RoundedRectangleBorder(),
+                                            clipBehavior:
+                                                Clip.antiAliasWithSaveLayer,
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return const ProductsFilterBottomSheet();
+                                            });
+                                      },
                                       icon: const Icon(
                                           Icons.filter_alt_outlined,
                                           color: Colors.black),
