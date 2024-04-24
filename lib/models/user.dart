@@ -1,4 +1,6 @@
-class User {
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserLocal {
   String? id;
   String email;
   String avatarURL;
@@ -6,11 +8,11 @@ class User {
   String username;
   String contactNo;
   String gender;
-  String dob;
+  DateTime dob;
   String address;
   List<String> likedProducts;
 
-  User(
+  UserLocal(
       {this.id,
       required this.email,
       required this.avatarURL,
@@ -21,4 +23,21 @@ class User {
       required this.dob,
       required this.address,
       required this.likedProducts});
+
+  factory UserLocal.fromFirestore(DocumentSnapshot doc, String emailAddress) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return UserLocal(
+      id: doc.id,
+      email: emailAddress,
+      avatarURL: data['avatarURL'],
+      displayName: data['displayName'],
+      username: data['username'],
+      contactNo: data['contactNo'],
+      gender: data['gender'],
+      dob: data['dob'].toDate(),
+      address: data['address'],
+      likedProducts: List<String>.from(data['likedProducts']),
+    );
+  }
 }
