@@ -38,4 +38,29 @@ class AuthService {
       throw Exception('failed to log: $e');
     }
   }
+
+  Future<void> signUp(
+      {required String email,
+      required String password,
+      required String displayName,
+      required String username,
+      required String mobileNumber,
+      required String role}) async {
+    try {
+      final UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      await _firestore.collection("users").doc(userCredential.user!.uid).set({
+        'displayName': displayName,
+        'username': username,
+        'contactNo': mobileNumber,
+        "role": role,
+        "likedProducts": [],
+        "avatarURL": "",
+        "address": "",
+      });
+    } catch (e) {
+      throw Exception('Failed to sign up: $e');
+    }
+  }
 }

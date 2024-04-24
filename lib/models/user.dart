@@ -3,26 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserLocal {
   String? id;
   String email;
-  String avatarURL;
+  String? avatarURL;
   String displayName;
   String username;
   String contactNo;
-  String gender;
-  DateTime dob;
-  String address;
+  String? address;
   List<String> likedProducts;
-  String role;
+  String? role;
 
   UserLocal(
       {this.id,
       required this.email,
-      required this.avatarURL,
+      this.avatarURL,
       required this.displayName,
       required this.username,
       required this.contactNo,
-      required this.gender,
-      required this.dob,
-      required this.address,
+      this.address,
       required this.likedProducts,
       required this.role});
 
@@ -36,8 +32,6 @@ class UserLocal {
         displayName: data['displayName'],
         username: data['username'],
         contactNo: data['contactNo'],
-        gender: data['gender'],
-        dob: data['dob'].toDate(),
         address: data['address'],
         likedProducts: List<String>.from(
           data['likedProducts'],
