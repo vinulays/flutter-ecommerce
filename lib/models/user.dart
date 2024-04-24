@@ -6,7 +6,7 @@ class UserLocal {
   String? avatarURL;
   String displayName;
   String username;
-  String contactNo;
+  String? contactNo;
   String? address;
   List<String> likedProducts;
   String? role;
@@ -17,17 +17,17 @@ class UserLocal {
       this.avatarURL,
       required this.displayName,
       required this.username,
-      required this.contactNo,
+      this.contactNo,
       this.address,
       required this.likedProducts,
       required this.role});
 
-  factory UserLocal.fromFirestore(DocumentSnapshot doc, String emailAddress) {
+  factory UserLocal.fromFirestore(DocumentSnapshot doc, String? emailAddress) {
     final data = doc.data() as Map<String, dynamic>;
 
     return UserLocal(
         id: doc.id,
-        email: emailAddress,
+        email: emailAddress!,
         avatarURL: data['avatarURL'],
         displayName: data['displayName'],
         username: data['username'],

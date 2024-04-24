@@ -27,4 +27,8 @@ class AuthRepository {
         mobileNumber: mobileNumber,
         role: role);
   }
+
+  Future<UserLocal?> signUpWithGoogle() async {
+    return _authService.signUpWithGoogle();
+  }
 }

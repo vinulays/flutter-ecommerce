@@ -41,3 +41,5 @@ class SignUpRequested extends AuthenticationEvent {
   List<Object> get props =>
       [displayName, username, email, mobileNumber, password, role];
 }
+
+class SignUpWithGoogleEvent extends AuthenticationEvent {}

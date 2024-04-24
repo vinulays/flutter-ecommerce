@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -28,6 +30,11 @@ class _SignupState extends State<Signup> {
         if (state is SignUpSuccess) {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => const Login()));
+        }
+
+        if (state is AuthenticationAuthenticated) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const Home()));
         }
       },
       child: Scaffold(
@@ -74,7 +81,8 @@ class _SignupState extends State<Signup> {
                               Expanded(
                                 flex: 1,
                                 child: FormBuilderTextField(
-                                  autovalidateMode: AutovalidateMode.always,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   style: GoogleFonts.poppins(),
                                   name: "firstname",
                                   cursorColor: Colors.black,
@@ -124,7 +132,8 @@ class _SignupState extends State<Signup> {
                               Expanded(
                                 flex: 1,
                                 child: FormBuilderTextField(
-                                  autovalidateMode: AutovalidateMode.always,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   style: GoogleFonts.poppins(),
                                   name: "lastname",
                                   cursorColor: Colors.black,
@@ -174,7 +183,8 @@ class _SignupState extends State<Signup> {
                             height: 20,
                           ),
                           FormBuilderTextField(
-                            autovalidateMode: AutovalidateMode.always,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: GoogleFonts.poppins(),
                             name: "username",
                             cursorColor: Colors.black,
@@ -218,7 +228,8 @@ class _SignupState extends State<Signup> {
                             height: 20,
                           ),
                           FormBuilderTextField(
-                            autovalidateMode: AutovalidateMode.always,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: GoogleFonts.poppins(),
                             name: "email",
                             cursorColor: Colors.black,
@@ -261,7 +272,8 @@ class _SignupState extends State<Signup> {
                             height: 20,
                           ),
                           FormBuilderTextField(
-                            autovalidateMode: AutovalidateMode.always,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: GoogleFonts.poppins(),
                             name: "phone",
                             cursorColor: Colors.black,
@@ -302,7 +314,8 @@ class _SignupState extends State<Signup> {
                             height: 20,
                           ),
                           FormBuilderTextField(
-                            autovalidateMode: AutovalidateMode.always,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             style: GoogleFonts.poppins(),
                             name: "password",
                             cursorColor: Colors.black,
@@ -369,20 +382,27 @@ class _SignupState extends State<Signup> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 0.5,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(13.0),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/google.svg",
-                                height: 30,
-                                width: 30,
+                        GestureDetector(
+                          onTap: () {
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(SignUpWithGoogleEvent());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  "assets/icons/google.svg",
+                                  height: 30,
+                                  width: 30,
+                                ),
                               ),
                             ),
                           ),
@@ -485,7 +505,9 @@ class _SignupState extends State<Signup> {
                             AuthenticationState>(
                           builder: (context, state) {
                             if (state is SignUpInProgress ||
-                                state is SignUpSuccess) {
+                                state is SignUpSuccess ||
+                                state is AuthenticationAuthenticated ||
+                                state is AuthenticationLoading) {
                               return const SizedBox(
                                 height: 27,
                                 width: 27,

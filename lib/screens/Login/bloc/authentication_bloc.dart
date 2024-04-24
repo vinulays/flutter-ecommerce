@@ -42,5 +42,21 @@ class AuthenticationBloc
         emit(SignUpFailure("Failed to sign up: $e"));
       }
     });
+
+    on<SignUpWithGoogleEvent>((event, emit) async {
+      emit(AuthenticationLoading());
+
+      try {
+        final UserLocal? user = await _authRepository.signUpWithGoogle();
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        } else {
+          emit(AuthenticationUnauthenticated());
+        }
+      } catch (e) {
+        throw Exception("failed sign up google: $e");
+        // emit(AuthenticationUnauthenticated());
+      }
+    });
   }
 }

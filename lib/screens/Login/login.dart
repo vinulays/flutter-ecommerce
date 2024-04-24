@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
@@ -180,20 +181,27 @@ class _LoginState extends State<Login> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.black.withOpacity(0.5)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  "assets/icons/google.svg",
-                                  height: 30,
-                                  width: 30,
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<AuthenticationBloc>()
+                                  .add(SignUpWithGoogleEvent());
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.black.withOpacity(0.5)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icons/google.svg",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
                             ),
