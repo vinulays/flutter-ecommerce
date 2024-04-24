@@ -52,6 +52,8 @@ dependencies:
   cached_network_image: ^3.3.1
   badges: ^3.1.2
   firebase_auth: ^4.19.2
+  flutter_form_builder: ^9.2.1
+  form_builder_validators: ^9.1.0
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +91,8 @@ flutter:
     - assets/icons/user.png
     - assets/icons/user-black.png
     - assets/icons/search.png
+    - assets/icons/google.svg
+    - assets/icons/facebook.svg
     - assets/images/promo-banner.jpg
     - assets/images/headphone-banner.jpg
     - assets/images/watch-banner.jpg
@@ -99,6 +103,7 @@ flutter:
     - assets/images/watch.png
     - assets/images/tshirt.png
     - assets/images/chair.png
+    - assets/icons/empty-folder.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

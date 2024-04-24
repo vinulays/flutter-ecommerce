@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/category_details.dart';
+import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
@@ -37,10 +37,17 @@ class _DashboardState extends State<Dashboard> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Hi, Vinula👋",
-                      style: GoogleFonts.poppins(
-                          fontSize: 25, fontWeight: FontWeight.w700),
+                    BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                      builder: (context, state) {
+                        if (state is AuthenticationAuthenticated) {
+                          return Text(
+                            "Hi, ${state.user.username}👋",
+                            style: GoogleFonts.poppins(
+                                fontSize: 25, fontWeight: FontWeight.w700),
+                          );
+                        }
+                        return Container();
+                      },
                     ),
                     const SizedBox(
                       height: 5,

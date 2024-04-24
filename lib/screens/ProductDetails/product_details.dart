@@ -5,6 +5,7 @@ import 'package:flutter_ecommerce/models/cart_item.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/utils/helper_functions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,10 +25,23 @@ class _ProductDetailsState extends State<ProductDetails> {
   int? value;
   int? colorValue;
 
+  Future<bool?> _toggleWishlistProduct(
+      BuildContext context, Product product, bool isLiked) async {
+    try {
+      context.read<WishlistBloc>().add(ToggleWishlistProduct(product));
+      // * Return true to indicate success
+      return true;
+    } catch (e) {
+      // * Return false to indicate failure
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     Product? product;
+    bool isLiked = false;
 
     List<Container> pages = [];
 
@@ -416,39 +430,55 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),
                             // * back and like button
-                            Container(
-                              height: 40,
-                              width: 40,
-                              margin: const EdgeInsets.only(top: 50, right: 25),
-                              decoration: const BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 3, top: 1, bottom: 1),
-                                child: LikeButton(
-                                  circleColor: const CircleColor(
-                                      start: Colors.red, end: Colors.red),
-                                  bubblesColor: const BubblesColor(
-                                    dotPrimaryColor: Colors.red,
-                                    dotSecondaryColor: Colors.red,
+                            BlocBuilder<WishlistBloc, WishlistState>(
+                              builder: (context, state) {
+                                if (state is WishlistLoaded) {
+                                  isLiked = state.wishlistProducts.any(
+                                      (wishListProduct) =>
+                                          wishListProduct.id == product!.id);
+                                }
+                                return Container(
+                                  height: 40,
+                                  width: 40,
+                                  margin:
+                                      const EdgeInsets.only(top: 50, right: 25),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 3, top: 1, bottom: 1),
+                                    child: LikeButton(
+                                      onTap: (bool isLiked) {
+                                        return _toggleWishlistProduct(
+                                            context, product!, isLiked);
+                                      },
+                                      isLiked: isLiked,
+                                      circleColor: const CircleColor(
+                                          start: Colors.red, end: Colors.red),
+                                      bubblesColor: const BubblesColor(
+                                        dotPrimaryColor: Colors.red,
+                                        dotSecondaryColor: Colors.red,
+                                      ),
+                                      likeBuilder: (bool isLiked) {
+                                        if (isLiked) {
+                                          return const Icon(
+                                            CupertinoIcons.heart_fill,
+                                            color: Colors.red,
+                                            size: 20,
+                                          );
+                                        } else {
+                                          return const Icon(
+                                            CupertinoIcons.heart,
+                                            color: Colors.black,
+                                            size: 20,
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
-                                  likeBuilder: (bool isLiked) {
-                                    if (isLiked) {
-                                      return const Icon(
-                                        CupertinoIcons.heart_fill,
-                                        color: Colors.red,
-                                        size: 20,
-                                      );
-                                    } else {
-                                      return const Icon(
-                                        CupertinoIcons.heart,
-                                        color: Colors.black,
-                                        size: 20,
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
+                                );
+                              },
                             ),
                           ],
                         ),
