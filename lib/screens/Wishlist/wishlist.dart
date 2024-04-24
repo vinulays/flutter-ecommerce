@@ -52,24 +52,50 @@ class _WishlistState extends State<Wishlist> {
               ),
               if (state is WishlistLoaded)
                 Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: deviceData.size.width * 0.05),
-                      child: Wrap(
-                        alignment: WrapAlignment.spaceBetween,
-                        runSpacing: 10,
-                        children:
-                            List.generate(wishlistProducts.length, (index) {
-                          return ProductCard(product: wishlistProducts[index]);
-                        }),
+                  child: Column(
+                    mainAxisAlignment: (state.wishlistProducts.isEmpty)
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.start,
+                    crossAxisAlignment: (state.wishlistProducts.isEmpty)
+                        ? CrossAxisAlignment.center
+                        : CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: deviceData.size.width * 0.05),
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          runSpacing: 10,
+                          children:
+                              List.generate(wishlistProducts.length, (index) {
+                            return ProductCard(
+                                product: wishlistProducts[index]);
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
-                ))
+                      if (state.wishlistProducts.isEmpty)
+                        SizedBox(
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                "assets/icons/empty-folder.png",
+                                height: 170,
+                                width: 170,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "Wishlist is Empty",
+                                style: GoogleFonts.poppins(fontSize: 25),
+                              )
+                            ],
+                          ),
+                        )
+                    ],
+                  ),
+                ),
             ],
           ),
         );
