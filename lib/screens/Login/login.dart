@@ -76,6 +76,11 @@ class _LoginState extends State<Login> {
                         height: 60,
                       ),
                       FormBuilderTextField(
+                        onTap: () {
+                          setState(() {
+                            errorMsg = null;
+                          });
+                        },
                         style: GoogleFonts.poppins(),
                         name: "email",
                         cursorColor: Colors.black,
@@ -84,9 +89,11 @@ class _LoginState extends State<Login> {
                             errorStyle: GoogleFonts.poppins(
                                 fontSize: 14, color: const Color(0xffba000d)),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 20),
+                            // isDense: true,
+                            prefix: Container(
+                              width: 20,
+                            ),
+                            contentPadding: EdgeInsets.zero,
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.black.withOpacity(0.15)),
@@ -100,13 +107,15 @@ class _LoginState extends State<Login> {
                                     color: Colors.black.withOpacity(0.15)),
                                 borderRadius: BorderRadius.circular(20)),
                             hintStyle: GoogleFonts.poppins(
+                                height: 4,
                                 color: Colors.black.withOpacity(0.40),
                                 fontWeight: FontWeight.w600),
-                            hintText: "Email or username"),
+                            hintText: "Email address"),
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: "Email is required."),
                           FormBuilderValidators.email(
-                              errorText: "Invalid email address")
+                              errorText: "Invalid email address.")
                         ]),
                       ),
                       const SizedBox(
@@ -123,9 +132,10 @@ class _LoginState extends State<Login> {
                             errorStyle: GoogleFonts.poppins(
                                 fontSize: 14, color: const Color(0xffba000d)),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 20),
+                            contentPadding: EdgeInsets.zero,
+                            prefix: Container(
+                              width: 20,
+                            ),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.black.withOpacity(0.15)),
@@ -139,11 +149,13 @@ class _LoginState extends State<Login> {
                                     color: Colors.black.withOpacity(0.15)),
                                 borderRadius: BorderRadius.circular(20)),
                             hintStyle: GoogleFonts.poppins(
+                                height: 4,
                                 color: Colors.black.withOpacity(0.40),
                                 fontWeight: FontWeight.w600),
                             hintText: "Password"),
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: "Password is required."),
                         ]),
                       ),
                       const SizedBox(
@@ -239,12 +251,16 @@ class _LoginState extends State<Login> {
                         margin: const EdgeInsets.only(bottom: 20),
                         child: TextButton(
                           onPressed: () {
-                            errorMsg = null;
+                            setState(() {
+                              errorMsg = null;
+                            });
 
                             if (_formKey.currentState!.saveAndValidate()) {
                               final values = _formKey.currentState!.value;
                               final email = values['email'] as String;
                               final password = values['password'] as String;
+
+                              _formKey.currentState!.reset();
 
                               context.read<AuthenticationBloc>().add(
                                   UserLoginRequested(
