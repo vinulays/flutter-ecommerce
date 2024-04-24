@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/repositories/auth_repository.dart';
@@ -28,7 +29,23 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
 
         emit(WishlistLoaded(wishlistProducts));
       } catch (e) {
-        emit(WishlistLoadingError("Failed to fetch wishlit: $e"));
+        emit(WishlistLoadingError("Failed to fetch wishlist: $e"));
+      }
+    });
+
+    on<ToggleWishlistProduct>((event, emit) async {
+      try {
+        User? user = await _authRepository.getCurrentUser();
+
+        await _wishListRepository.toggleProductInWishlist(
+            user!.uid, event.product.id!);
+
+        final List<Product> wishlistProducts =
+            await _wishListRepository.getWishListProducts(user.uid);
+
+        emit(WishlistLoaded(wishlistProducts));
+      } catch (e) {
+        emit(WishlistLoadingError("Failed to toggle product: $e"));
       }
     });
   }

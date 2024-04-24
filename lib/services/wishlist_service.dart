@@ -53,4 +53,25 @@ class WishListService {
       throw ('Error fetching liked products: $e');
     }
   }
+
+  Future<void> toggleProductInWishlist(String userId, String productId) async {
+    try {
+      final DocumentReference userDocRef =
+          _firestore.collection('users').doc(userId);
+
+      final DocumentSnapshot userSnapshot = await userDocRef.get();
+      List<String> likedProducts =
+          List<String>.from(userSnapshot.get('likedProducts') ?? []);
+
+      if (likedProducts.contains(productId)) {
+        likedProducts.remove(productId);
+      } else {
+        likedProducts.add(productId);
+      }
+
+      await userDocRef.update({'likedProducts': likedProducts});
+    } catch (e) {
+      throw Exception('Failed to toggle product in wishlist: $e');
+    }
+  }
 }

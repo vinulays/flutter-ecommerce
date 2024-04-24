@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,12 +13,17 @@ class Wishlist extends StatefulWidget {
 }
 
 class _WishlistState extends State<Wishlist> {
+  List<Product> wishlistProducts = [];
+
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
     return BlocBuilder<WishlistBloc, WishlistState>(
       builder: (context, state) {
+        if (state is WishlistLoaded) {
+          wishlistProducts = state.wishlistProducts;
+        }
         return Scaffold(
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,10 +62,9 @@ class _WishlistState extends State<Wishlist> {
                       child: Wrap(
                         alignment: WrapAlignment.spaceBetween,
                         runSpacing: 10,
-                        children: List.generate(state.wishlistProducts.length,
-                            (index) {
-                          return ProductCard(
-                              product: state.wishlistProducts[index]);
+                        children:
+                            List.generate(wishlistProducts.length, (index) {
+                          return ProductCard(product: wishlistProducts[index]);
                         }),
                       ),
                     ),

@@ -21,12 +21,16 @@ class AuthenticationBloc
     on<UserLoginRequested>((event, emit) async {
       emit(AuthenticationLoading());
 
-      final user = await _authRepository.loginWithEmailAndPassword(
-          event.email, event.password);
+      try {
+        final user = await _authRepository.loginWithEmailAndPassword(
+            event.email, event.password);
 
-      if (user != null) {
-        emit(AuthenticationAuthenticated(user));
-      } else {
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        } else {
+          emit(AuthenticationUnauthenticated());
+        }
+      } catch (e) {
         emit(AuthenticationUnauthenticated());
       }
     });

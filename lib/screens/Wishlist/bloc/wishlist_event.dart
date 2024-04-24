@@ -6,3 +6,12 @@ sealed class WishlistEvent extends Equatable {
 }
 
 class FetchWishListEvent extends WishlistEvent {}
+
+class ToggleWishlistProduct extends WishlistEvent {
+  final Product product;
+
+  ToggleWishlistProduct(this.product);
+
+  @override
+  List<Object> get props => [product];
+}

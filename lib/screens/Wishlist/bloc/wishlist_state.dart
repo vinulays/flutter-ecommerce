@@ -24,22 +24,22 @@ class WishlistLoadingError extends WishlistState {
   WishlistLoadingError(this.errorMessage);
 }
 
-class WishlistAdding extends WishlistState {}
+// class WishlistAdding extends WishlistState {}
 
-class WishlistAdded extends WishlistState {}
+// class WishlistAdded extends WishlistState {}
 
-class WishlistAddingError extends WishlistState {
-  final String errorMessage;
+// class WishlistAddingError extends WishlistState {
+//   final String errorMessage;
 
-  WishlistAddingError(this.errorMessage);
-}
+//   WishlistAddingError(this.errorMessage);
+// }
 
-class WishlistRemoving extends WishlistState {}
+// class WishlistRemoving extends WishlistState {}
 
-class WishlistRemoved extends WishlistState {}
+// class WishlistRemoved extends WishlistState {}
 
-class WishlistRemovingError extends WishlistState {
-  final String errorMessage;
+// class WishlistRemovingError extends WishlistState {
+//   final String errorMessage;
 
-  WishlistRemovingError(this.errorMessage);
-}
+//   WishlistRemovingError(this.errorMessage);
+// }

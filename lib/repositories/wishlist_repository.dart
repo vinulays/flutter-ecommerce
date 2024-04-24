@@ -10,4 +10,8 @@ class WishListRepository {
   Future<List<Product>> getWishListProducts(String userId) async {
     return _wishListService.getLikedProducts(userId);
   }
+
+  Future<void> toggleProductInWishlist(String userId, String productId) async {
+    await _wishListService.toggleProductInWishlist(userId, productId);
+  }
 }
