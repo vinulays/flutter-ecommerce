@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
+import 'package:flutter_ecommerce/screens/Signup/signup.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,7 +36,7 @@ class _LoginState extends State<Login> {
           } else if (state is AuthenticationUnauthenticated) {
             // * set error message under the email field
             setState(() {
-              errorMsg = "Invalid Credentials";
+              errorMsg = "Invalid Email address or Password";
             });
           }
         },
@@ -235,11 +237,17 @@ class _LoginState extends State<Login> {
                                     fontSize: 15,
                                     color: Colors.black.withOpacity(0.4))),
                             TextSpan(
-                                text: "Register",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                )),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const Signup()));
+                                },
+                              text: "Register",
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
