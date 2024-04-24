@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
+import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -27,6 +26,8 @@ class _LoginState extends State<Login> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationAuthenticated) {
+            context.read<WishlistBloc>().add(FetchWishListEvent());
+
             // * navigatin to home page after a successfull login
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => const Home()));
@@ -265,7 +266,8 @@ class _LoginState extends State<Login> {
                           child: BlocBuilder<AuthenticationBloc,
                               AuthenticationState>(
                             builder: (context, state) {
-                              if (state is AuthenticationLoading) {
+                              if (state is AuthenticationLoading ||
+                                  state is AuthenticationAuthenticated) {
                                 return const SizedBox(
                                   height: 27,
                                   width: 27,

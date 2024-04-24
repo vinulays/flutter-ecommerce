@@ -5,17 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/firebase_options.dart';
+import 'package:flutter_ecommerce/repositories/auth_repository.dart';
 import 'package:flutter_ecommerce/repositories/cart_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
+import 'package:flutter_ecommerce/repositories/wishlist_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/services/auth_service.dart';
 import 'package:flutter_ecommerce/services/cart_service.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
+import 'package:flutter_ecommerce/services/wishlist_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,12 +76,30 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        // * Auth bloc provider
         BlocProvider<AuthenticationBloc>(
-            create: (context) => AuthenticationBloc(
-                firebaseAuth: FirebaseAuth.instance,
-                authService: AuthService(
-                    firebaseAuth: FirebaseAuth.instance,
-                    firestore: FirebaseFirestore.instance)))
+          create: (context) => AuthenticationBloc(
+            firebaseAuth: FirebaseAuth.instance,
+            authRepository: AuthRepository(
+              authService: AuthService(
+                  firebaseAuth: FirebaseAuth.instance,
+                  firestore: FirebaseFirestore.instance),
+            ),
+          ),
+        ),
+        // *Wishlist bloc provider
+        BlocProvider<WishlistBloc>(
+          create: (context) => WishlistBloc(
+            wishListRepository: WishListRepository(
+                wishListService:
+                    WishListService(fireStore: FirebaseFirestore.instance)),
+            authRepository: AuthRepository(
+              authService: AuthService(
+                  firebaseAuth: FirebaseAuth.instance,
+                  firestore: FirebaseFirestore.instance),
+            ),
+          ),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
