@@ -15,12 +15,11 @@ class ProductCard extends StatelessWidget {
   Future<bool?> _toggleWishlistProduct(
       BuildContext context, Product product, bool isLiked) async {
     try {
-      // Dispatch the ToggleWishlistProduct event to the bloc
       context.read<WishlistBloc>().add(ToggleWishlistProduct(product));
-      // Return true to indicate success
+      // * Return true to indicate success
       return true;
     } catch (e) {
-      // Return false to indicate failure
+      // * Return false to indicate failure
       return false;
     }
   }
