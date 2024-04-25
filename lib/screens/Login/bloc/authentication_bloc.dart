@@ -58,5 +58,21 @@ class AuthenticationBloc
         // emit(AuthenticationUnauthenticated());
       }
     });
+
+    on<SignUpWithFacebookEvent>((event, emit) async {
+      emit(AuthenticationLoading());
+
+      try {
+        final UserLocal? user = await _authRepository.signUpWithFacebook();
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        } else {
+          emit(AuthenticationUnauthenticated());
+        }
+      } catch (e) {
+        throw Exception("failed sign up facebook: $e");
+        // emit(AuthenticationUnauthenticated());
+      }
+    });
   }
 }

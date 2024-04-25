@@ -43,3 +43,5 @@ class SignUpRequested extends AuthenticationEvent {
 }
 
 class SignUpWithGoogleEvent extends AuthenticationEvent {}
+
+class SignUpWithFacebookEvent extends AuthenticationEvent {}

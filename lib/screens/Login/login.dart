@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -209,20 +210,27 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.black.withOpacity(0.5)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  "assets/icons/facebook.svg",
-                                  height: 30,
-                                  width: 30,
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<AuthenticationBloc>()
+                                  .add(SignUpWithFacebookEvent());
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.black.withOpacity(0.5)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icons/facebook.svg",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
                             ),

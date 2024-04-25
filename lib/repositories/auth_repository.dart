@@ -31,4 +31,8 @@ class AuthRepository {
   Future<UserLocal?> signUpWithGoogle() async {
     return _authService.signUpWithGoogle();
   }
+
+  Future<UserLocal?> signUpWithFacebook() async {
+    return _authService.signUpWithFacebook();
+  }
 }

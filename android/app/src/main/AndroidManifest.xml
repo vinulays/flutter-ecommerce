@@ -50,6 +50,8 @@
             <data android:mimeType="text/plain"/>
         </intent>
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
+        <provider android:authorities="com.facebook.orca.provider.PlatformProvider" />
+
 
     </queries>
 </manifest>

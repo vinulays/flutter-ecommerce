@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_ecommerce/models/user.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
@@ -108,5 +109,44 @@ class AuthService {
       throw Exception("failed to sign in gogle: $e");
       // return null;
     }
+  }
+
+  Future<UserLocal?> signUpWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      if (loginResult.status == LoginStatus.success) {
+        final AuthCredential credential =
+            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+        final UserCredential userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
+
+        final User? user = userCredential.user;
+
+        if (user != null) {
+          final DocumentSnapshot doc =
+              await _firestore.collection('users').doc(user.uid).get();
+
+          if (!doc.exists) {
+            await _firestore.collection('users').doc(user.uid).set({
+              'displayName': user.displayName,
+              "avatarURL": user.photoURL,
+              "username": user.displayName,
+              "role": "user",
+              "likedProducts": []
+            });
+          }
+
+          final DocumentSnapshot docFinal =
+              await _firestore.collection('users').doc(user.uid).get();
+
+          return UserLocal.fromFirestore(docFinal, user.email);
+        }
+      }
+    } catch (e) {
+      throw Exception("Failed to login facebook: $e");
+    }
+    return null;
   }
 }

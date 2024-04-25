@@ -410,20 +410,27 @@ class _SignupState extends State<Signup> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                width: 0.5,
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(13.0),
-                            child: Center(
-                              child: SvgPicture.asset(
-                                "assets/icons/facebook.svg",
-                                height: 30,
-                                width: 30,
+                        GestureDetector(
+                          onTap: () {
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(SignUpWithFacebookEvent());
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(13.0),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  "assets/icons/facebook.svg",
+                                  height: 30,
+                                  width: 30,
+                                ),
                               ),
                             ),
                           ),
