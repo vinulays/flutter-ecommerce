@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Dashboard/dashboard.dart';
+import 'package:flutter_ecommerce/screens/Profile/profile.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/wishlist.dart';
@@ -25,7 +26,7 @@ class _HomeState extends State<Home> {
     ShoppingCart(
       fromWhere: "home",
     ),
-    Dashboard(),
+    Profile(),
 
     // * Notifications
   ];

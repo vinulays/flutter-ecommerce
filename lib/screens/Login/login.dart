@@ -306,8 +306,7 @@ class _LoginState extends State<Login> {
                           child: BlocBuilder<AuthenticationBloc,
                               AuthenticationState>(
                             builder: (context, state) {
-                              if (state is AuthenticationLoading ||
-                                  state is AuthenticationAuthenticated) {
+                              if (state is AuthenticationLoading) {
                                 return const SizedBox(
                                   height: 27,
                                   width: 27,

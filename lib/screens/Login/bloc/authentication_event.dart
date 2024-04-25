@@ -45,3 +45,9 @@ class SignUpRequested extends AuthenticationEvent {
 class SignUpWithGoogleEvent extends AuthenticationEvent {}
 
 class SignUpWithFacebookEvent extends AuthenticationEvent {}
+
+class LogoutRequested extends AuthenticationEvent {
+  final BuildContext context;
+
+  LogoutRequested(this.context);
+}

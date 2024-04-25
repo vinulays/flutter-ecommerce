@@ -132,7 +132,7 @@ class AuthService {
             await _firestore.collection('users').doc(user.uid).set({
               'displayName': user.displayName,
               "avatarURL": user.photoURL,
-              "username": user.displayName,
+              "username": user.displayName!.split(' ')[0],
               "role": "user",
               "likedProducts": []
             });
@@ -148,5 +148,13 @@ class AuthService {
       throw Exception("Failed to login facebook: $e");
     }
     return null;
+  }
+
+  Future<void> logout() async {
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw Exception("Failed to logout: $e");
+    }
   }
 }
