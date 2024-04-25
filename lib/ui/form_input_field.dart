@@ -57,7 +57,7 @@ class FormInputField extends StatelessWidget {
             decoration: InputDecoration(
                 errorStyle: GoogleFonts.poppins(
                     fontSize: 14, color: const Color(0xffba000d)),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
+
                 // isDense: true,
                 prefix: Container(
                   width: 20,
