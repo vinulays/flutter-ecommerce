@@ -18,4 +18,8 @@ class ProductRepository {
   Future<List<Product>> getProductsByCategoryId(String categoryId) async {
     return _productService.getProductsByCategoryId(categoryId);
   }
+
+  Future<void> addProduct(Map<String, dynamic> formData) async {
+    await _productService.addProduct(formData);
+  }
 }

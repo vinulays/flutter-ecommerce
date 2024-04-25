@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_ecommerce/models/product.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductService {
   final FirebaseFirestore _firestore;
@@ -123,6 +126,65 @@ class ProductService {
     } catch (e) {
       // Handle errors if any
       throw Exception('Failed to get products by the category: $e');
+    }
+  }
+
+  Future<void> addProduct(Map<String, dynamic> formData) async {
+    String? thumbnailURL = await uploadImage(formData["thumbnailImage"]);
+    List<String?> coverUrls = [];
+
+    try {
+      coverUrls = await Future.wait(
+        (formData["coverImages"] as List<XFile>).map(
+          (coverImage) async {
+            try {
+              Reference ref =
+                  _storage.ref().child("productImages").child(coverImage.name);
+
+              UploadTask uploadTask = ref.putFile(File(coverImage.path));
+
+              String url = await (await uploadTask).ref.getDownloadURL();
+
+              return url;
+            } catch (e) {
+              return null;
+            }
+          },
+        ),
+      );
+
+      await _firestore.collection("products").add({
+        "title": formData["title"],
+        "description": formData["description"],
+        "categoryId": formData["categoryId"],
+        "thumbnailURL": thumbnailURL,
+        "imageURLs": coverUrls,
+        "createdAt": DateTime.now(),
+        "colors": formData["colors"],
+        "sizes": formData["sizes"],
+        "isInStock": bool.parse(formData["isInStock"]),
+        "rating": 0,
+        "price": int.parse(formData["price"])
+      });
+    } catch (e) {
+      throw Exception("Failed to add product: $e");
+    }
+  }
+
+  Future<String?> uploadImage(File imageFile) async {
+    try {
+      Reference ref = _storage
+          .ref()
+          .child("productImages")
+          .child(imageFile.path.split('/').last);
+
+      UploadTask uploadTask = ref.putFile(imageFile);
+
+      String url = await (await uploadTask).ref.getDownloadURL();
+
+      return url;
+    } catch (e) {
+      throw Exception('Error uploading image: $e');
     }
   }
 }
