@@ -12,6 +12,8 @@ class HelperFunctions {
       return Colors.green;
     } else if (value == "red") {
       return Colors.red;
+    } else if (value == "yellow") {
+      return Colors.yellow;
     }
 
     return Colors.white;

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
+import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -197,18 +198,30 @@ class _ProfileState extends State<Profile> {
                         height: 15,
                       ),
                     if (userLocal!.role == "admin")
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Add a product",
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                color: Colors.black.withOpacity(0.6)),
-                          ),
-                          Icon(Icons.chevron_right_rounded,
-                              size: 30, color: Colors.black.withOpacity(0.6))
-                        ],
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ProductForm(
+                                isUpdate: false,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Add a product",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                            Icon(Icons.chevron_right_rounded,
+                                size: 30, color: Colors.black.withOpacity(0.6))
+                          ],
+                        ),
                       ),
 
                     const SizedBox(
@@ -311,6 +324,7 @@ class _ProfileState extends State<Profile> {
                     ),
 
                     GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       onTap: () {
                         context
                             .read<AuthenticationBloc>()
