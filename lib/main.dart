@@ -79,7 +79,6 @@ class MyApp extends StatelessWidget {
         // * Auth bloc provider
         BlocProvider<AuthenticationBloc>(
           create: (context) => AuthenticationBloc(
-            firebaseAuth: FirebaseAuth.instance,
             authRepository: AuthRepository(
               authService: AuthService(
                   firebaseAuth: FirebaseAuth.instance,

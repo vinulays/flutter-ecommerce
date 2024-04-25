@@ -19,3 +19,16 @@ class AuthenticationAuthenticated extends AuthenticationState {
 }
 
 class AuthenticationUnauthenticated extends AuthenticationState {}
+
+class SignUpInProgress extends AuthenticationState {}
+
+class SignUpSuccess extends AuthenticationState {}
+
+class SignUpFailure extends AuthenticationState {
+  final String errorMessage;
+
+  SignUpFailure(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}

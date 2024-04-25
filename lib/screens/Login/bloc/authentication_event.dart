@@ -20,3 +20,28 @@ class UserLoginRequested extends AuthenticationEvent {
   @override
   List<Object?> get props => [email, password];
 }
+
+class SignUpRequested extends AuthenticationEvent {
+  final String displayName;
+  final String username;
+  final String email;
+  final String mobileNumber;
+  final String password;
+  final String role;
+
+  SignUpRequested(
+      {required this.displayName,
+      required this.username,
+      required this.email,
+      required this.mobileNumber,
+      required this.password,
+      required this.role});
+
+  @override
+  List<Object> get props =>
+      [displayName, username, email, mobileNumber, password, role];
+}
+
+class SignUpWithGoogleEvent extends AuthenticationEvent {}
+
+class SignUpWithFacebookEvent extends AuthenticationEvent {}

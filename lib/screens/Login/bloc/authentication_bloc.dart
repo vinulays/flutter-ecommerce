@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/repositories/auth_repository.dart';
@@ -9,14 +8,10 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final FirebaseAuth _firebaseAuth;
   final AuthRepository _authRepository;
 
-  AuthenticationBloc(
-      {required FirebaseAuth firebaseAuth,
-      required AuthRepository authRepository})
-      : _firebaseAuth = firebaseAuth,
-        _authRepository = authRepository,
+  AuthenticationBloc({required AuthRepository authRepository})
+      : _authRepository = authRepository,
         super(AuthenticationInitial()) {
     on<UserLoginRequested>((event, emit) async {
       emit(AuthenticationLoading());
@@ -32,6 +27,51 @@ class AuthenticationBloc
         }
       } catch (e) {
         emit(AuthenticationUnauthenticated());
+      }
+    });
+
+    on<SignUpRequested>((event, emit) async {
+      emit(SignUpInProgress());
+
+      try {
+        await _authRepository.signUp(event.email, event.password,
+            event.displayName, event.username, event.mobileNumber, event.role);
+
+        emit(SignUpSuccess());
+      } catch (e) {
+        emit(SignUpFailure("Failed to sign up: $e"));
+      }
+    });
+
+    on<SignUpWithGoogleEvent>((event, emit) async {
+      emit(AuthenticationLoading());
+
+      try {
+        final UserLocal? user = await _authRepository.signUpWithGoogle();
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        } else {
+          emit(AuthenticationUnauthenticated());
+        }
+      } catch (e) {
+        throw Exception("failed sign up google: $e");
+        // emit(AuthenticationUnauthenticated());
+      }
+    });
+
+    on<SignUpWithFacebookEvent>((event, emit) async {
+      emit(AuthenticationLoading());
+
+      try {
+        final UserLocal? user = await _authRepository.signUpWithFacebook();
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        } else {
+          emit(AuthenticationUnauthenticated());
+        }
+      } catch (e) {
+        throw Exception("failed sign up facebook: $e");
+        // emit(AuthenticationUnauthenticated());
       }
     });
   }

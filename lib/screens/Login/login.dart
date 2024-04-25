@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/Home/home.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
+import 'package:flutter_ecommerce/screens/Signup/signup.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,7 +38,7 @@ class _LoginState extends State<Login> {
           } else if (state is AuthenticationUnauthenticated) {
             // * set error message under the email field
             setState(() {
-              errorMsg = "Invalid Credentials";
+              errorMsg = "Invalid Email address or Password";
             });
           }
         },
@@ -76,6 +80,11 @@ class _LoginState extends State<Login> {
                         height: 60,
                       ),
                       FormBuilderTextField(
+                        onTap: () {
+                          setState(() {
+                            errorMsg = null;
+                          });
+                        },
                         style: GoogleFonts.poppins(),
                         name: "email",
                         cursorColor: Colors.black,
@@ -84,9 +93,11 @@ class _LoginState extends State<Login> {
                             errorStyle: GoogleFonts.poppins(
                                 fontSize: 14, color: const Color(0xffba000d)),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 20),
+                            // isDense: true,
+                            prefix: Container(
+                              width: 20,
+                            ),
+                            contentPadding: EdgeInsets.zero,
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.black.withOpacity(0.15)),
@@ -100,13 +111,15 @@ class _LoginState extends State<Login> {
                                     color: Colors.black.withOpacity(0.15)),
                                 borderRadius: BorderRadius.circular(20)),
                             hintStyle: GoogleFonts.poppins(
+                                height: 4,
                                 color: Colors.black.withOpacity(0.40),
                                 fontWeight: FontWeight.w600),
-                            hintText: "Email or username"),
+                            hintText: "Email address"),
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: "Email is required."),
                           FormBuilderValidators.email(
-                              errorText: "Invalid email address")
+                              errorText: "Invalid email address.")
                         ]),
                       ),
                       const SizedBox(
@@ -123,9 +136,10 @@ class _LoginState extends State<Login> {
                             errorStyle: GoogleFonts.poppins(
                                 fontSize: 14, color: const Color(0xffba000d)),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 20),
+                            contentPadding: EdgeInsets.zero,
+                            prefix: Container(
+                              width: 20,
+                            ),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Colors.black.withOpacity(0.15)),
@@ -139,11 +153,13 @@ class _LoginState extends State<Login> {
                                     color: Colors.black.withOpacity(0.15)),
                                 borderRadius: BorderRadius.circular(20)),
                             hintStyle: GoogleFonts.poppins(
+                                height: 4,
                                 color: Colors.black.withOpacity(0.40),
                                 fontWeight: FontWeight.w600),
                             hintText: "Password"),
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                              errorText: "Password is required."),
                         ]),
                       ),
                       const SizedBox(
@@ -166,20 +182,27 @@ class _LoginState extends State<Login> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.black.withOpacity(0.5)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  "assets/icons/google.svg",
-                                  height: 30,
-                                  width: 30,
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<AuthenticationBloc>()
+                                  .add(SignUpWithGoogleEvent());
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.black.withOpacity(0.5)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icons/google.svg",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
                             ),
@@ -187,20 +210,27 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.black.withOpacity(0.5)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  "assets/icons/facebook.svg",
-                                  height: 30,
-                                  width: 30,
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<AuthenticationBloc>()
+                                  .add(SignUpWithFacebookEvent());
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.black.withOpacity(0.5)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(13.0),
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icons/facebook.svg",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
                             ),
@@ -223,11 +253,17 @@ class _LoginState extends State<Login> {
                                     fontSize: 15,
                                     color: Colors.black.withOpacity(0.4))),
                             TextSpan(
-                                text: "Register",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                )),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const Signup()));
+                                },
+                              text: "Register",
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -239,12 +275,16 @@ class _LoginState extends State<Login> {
                         margin: const EdgeInsets.only(bottom: 20),
                         child: TextButton(
                           onPressed: () {
-                            errorMsg = null;
+                            setState(() {
+                              errorMsg = null;
+                            });
 
                             if (_formKey.currentState!.saveAndValidate()) {
                               final values = _formKey.currentState!.value;
                               final email = values['email'] as String;
                               final password = values['password'] as String;
+
+                              _formKey.currentState!.reset();
 
                               context.read<AuthenticationBloc>().add(
                                   UserLoginRequested(
