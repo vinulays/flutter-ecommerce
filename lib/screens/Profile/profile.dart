@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
+import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -266,22 +268,28 @@ class _ProfileState extends State<Profile> {
                             size: 30, color: Colors.black.withOpacity(0.6))
                       ],
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Password",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
-                    ),
+                    if (FirebaseAuth
+                            .instance.currentUser!.providerData[0].providerId ==
+                        "password")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (FirebaseAuth
+                            .instance.currentUser!.providerData[0].providerId ==
+                        "password")
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Reset Password",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.6)),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 30, color: Colors.black.withOpacity(0.6))
+                        ],
+                      ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -301,17 +309,31 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Log out",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16, color: Colors.red),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.red.withOpacity(0.7))
-                      ],
+
+                    GestureDetector(
+                      onTap: () {
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(LogoutRequested(context));
+
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Log out",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16, color: Colors.red),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 30, color: Colors.red.withOpacity(0.7))
+                        ],
+                      ),
                     ),
                   ],
                 )),

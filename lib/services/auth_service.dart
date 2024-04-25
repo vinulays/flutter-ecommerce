@@ -149,4 +149,12 @@ class AuthService {
     }
     return null;
   }
+
+  Future<void> logout() async {
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      throw Exception("Failed to logout: $e");
+    }
+  }
 }

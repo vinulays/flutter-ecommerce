@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/repositories/auth_repository.dart';
@@ -72,6 +73,14 @@ class AuthenticationBloc
       } catch (e) {
         throw Exception("failed sign up facebook: $e");
         // emit(AuthenticationUnauthenticated());
+      }
+    });
+
+    on<LogoutRequested>((event, emit) async {
+      try {
+        await _authRepository.logout();
+      } catch (e) {
+        emit(LogoutFailure("Failed to logout: $e"));
       }
     });
   }

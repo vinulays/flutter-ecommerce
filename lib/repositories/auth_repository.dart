@@ -35,4 +35,8 @@ class AuthRepository {
   Future<UserLocal?> signUpWithFacebook() async {
     return _authService.signUpWithFacebook();
   }
+
+  Future<void> logout() async {
+    await _authService.logout();
+  }
 }
