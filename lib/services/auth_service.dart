@@ -132,7 +132,7 @@ class AuthService {
             await _firestore.collection('users').doc(user.uid).set({
               'displayName': user.displayName,
               "avatarURL": user.photoURL,
-              "username": user.displayName,
+              "username": user.displayName!.split(' ')[0],
               "role": "user",
               "likedProducts": []
             });
