@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/form_drop_down.dart';
 import 'package:flutter_ecommerce/ui/form_input_field.dart';
 import 'package:flutter_ecommerce/ui/form_multi_drop_down.dart';
@@ -39,7 +41,7 @@ class _ProductFormState extends State<ProductForm> {
         _thumbnailImage = File(pickedFile.path);
 
         _formKey.currentState?.fields["thumbnailImage"]
-            ?.didChange(_thumbnailImage!.path.toString());
+            ?.didChange(_thumbnailImage);
       });
     } else {
       _formKey.currentState?.fields["thumbnailImage"]?.didChange(null);
@@ -53,8 +55,7 @@ class _ProductFormState extends State<ProductForm> {
       setState(() {
         coverImages.addAll(selectedImages);
 
-        _formKey.currentState?.fields["coverImages"]
-            ?.didChange(coverImages.map((e) => e.path).toList());
+        _formKey.currentState?.fields["coverImages"]?.didChange(coverImages);
       });
     } else {
       _formKey.currentState?.fields["coverImages"]?.didChange(null);
@@ -216,7 +217,7 @@ class _ProductFormState extends State<ProductForm> {
                             ]),
                             title: "Category",
                             isRequired: true,
-                            formBuilderName: "category",
+                            formBuilderName: "categoryId",
                             items: productCategories
                                 .map((category) => DropdownMenuItem(
                                     value: category.id,
@@ -546,8 +547,34 @@ class _ProductFormState extends State<ProductForm> {
                           child: TextButton(
                               onPressed: () {
                                 if (_formKey.currentState!.saveAndValidate()) {
-                                  debugPrint(
-                                      _formKey.currentState!.value.toString());
+                                  Map<String, dynamic> formData =
+                                      Map.from(_formKey.currentState!.value);
+
+                                  List<String> sizes = [];
+                                  List<String> colors = [];
+
+                                  if (_sizeController
+                                      .selectedOptions.isNotEmpty) {
+                                    for (var option
+                                        in _sizeController.selectedOptions) {
+                                      sizes.add(option.value);
+                                    }
+                                  }
+
+                                  if (_colorController
+                                      .selectedOptions.isNotEmpty) {
+                                    for (var option
+                                        in _colorController.selectedOptions) {
+                                      colors.add(option.value);
+                                    }
+                                  }
+
+                                  formData['sizes'] = sizes;
+                                  formData['colors'] = colors;
+
+                                  context
+                                      .read<ProductsBloc>()
+                                      .add(AddProductEvent(formData));
                                 }
                               },
                               style: ButtonStyle(
@@ -564,12 +591,25 @@ class _ProductFormState extends State<ProductForm> {
                                     MaterialStateProperty.all<Color>(
                                         Colors.black),
                               ),
-                              child: Text(
-                                "Submit",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white),
+                              child: BlocBuilder<ProductsBloc, ProductsState>(
+                                builder: (context, state) {
+                                  if (state is ProductAdding) {
+                                    return const SizedBox(
+                                      height: 27,
+                                      width: 27,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  }
+                                  return Text(
+                                    "Submit",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white),
+                                  );
+                                },
                               )),
                         ),
                       ],

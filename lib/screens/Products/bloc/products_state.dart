@@ -24,7 +24,7 @@ class ProductsLoadingError extends ProductsState {
   ProductsLoadingError(this.errorMessage);
 }
 
-class ProductsAdding extends ProductsState {}
+class ProductAdding extends ProductsState {}
 
 class ProductAdded extends ProductsState {}
 
