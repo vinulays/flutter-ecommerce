@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_ecommerce/ui/form_drop_down.dart';
 import 'package:flutter_ecommerce/ui/form_input_field.dart';
 import 'package:flutter_ecommerce/ui/form_multi_drop_down.dart';
 import 'package:flutter_ecommerce/ui/form_text_area.dart';
+import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 class ProductForm extends StatefulWidget {
@@ -19,8 +24,33 @@ class ProductForm extends StatefulWidget {
 class _ProductFormState extends State<ProductForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
+  final ImagePicker _picker = ImagePicker();
+
   final MultiSelectController _sizeController = MultiSelectController();
   final MultiSelectController _colorController = MultiSelectController();
+
+  File? _thumbnailImage;
+  List<XFile> coverImages = [];
+
+  Future<void> pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _thumbnailImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  void pickCoverPhotos() async {
+    final List<XFile> selectedImages = await _picker.pickMultiImage();
+
+    if (selectedImages.isNotEmpty) {
+      setState(() {
+        coverImages.addAll(selectedImages);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,9 +172,7 @@ class _ProductFormState extends State<ProductForm> {
                       ValueItem(label: 'EU 34', value: 'EU 34'),
                       ValueItem(label: 'EU 36', value: 'EU 36'),
                     ],
-                    disabledOptions: const [
-                      ValueItem(label: 'Small', value: 'S')
-                    ],
+                    disabledOptions: const [],
                   ),
 
                   // * Product colors
@@ -160,9 +188,286 @@ class _ProductFormState extends State<ProductForm> {
                       ValueItem(label: 'Red', value: 'red'),
                       ValueItem(label: 'Yellow', value: 'yellow'),
                     ],
-                    disabledOptions: const [
-                      ValueItem(label: 'White', value: 'white')
+                    disabledOptions: const [],
+                  ),
+                  // * Product category
+                  FormDropDown(
+                      title: "Category",
+                      isRequired: true,
+                      formBuilderName: "category",
+                      items: productCategories
+                          .map((category) => DropdownMenuItem(
+                              value: category.id,
+                              child: Text(
+                                category.name,
+                                style: GoogleFonts.poppins(fontSize: 16),
+                              )))
+                          .toList()),
+                  // * Thumbnail image
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Thumbnail Image",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '*',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFFFF0000),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_thumbnailImage != null)
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              height: 140,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: FileImage(_thumbnailImage!)),
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                            Positioned(
+                                top: -5,
+                                right: -5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _thumbnailImage = null;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      if (_thumbnailImage != null)
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      GestureDetector(
+                        onTap: () {
+                          if (_thumbnailImage == null) {
+                            pickImage();
+                          }
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 140,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.camera_alt,
+                                size: 35,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Upload",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              Text(
+                                "Image",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // * Cover images
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Cover Images",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '*',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFFFF0000),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            height: 0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Wrap(
+                    runSpacing: 20,
+                    children: [
+                      if (coverImages.isNotEmpty)
+                        Wrap(
+                          spacing: 20,
+                          children: List.generate(coverImages.length, (index) {
+                            return Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  height: 140,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(
+                                              File(coverImages[index].path))),
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(20)),
+                                ),
+                                Positioned(
+                                    top: -5,
+                                    right: -5,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          coverImages.removeAt(index);
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 35,
+                                        width: 35,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                              ],
+                            );
+                          }),
+                        ),
+                      if (coverImages.isNotEmpty)
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      GestureDetector(
+                        onTap: () {
+                          pickCoverPhotos();
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 140,
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.camera_alt,
+                                size: 35,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Upload",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              Text(
+                                "Images",
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // * Submit button
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 20),
+                    child: TextButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.8),
+                            ),
+                          ),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(vertical: 17.88)),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black),
+                        ),
+                        child: Text(
+                          "Submit",
+                          style: GoogleFonts.poppins(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        )),
                   ),
                 ],
               )),

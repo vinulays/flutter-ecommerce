@@ -54,6 +54,8 @@ class FormMultiDropDown extends StatelessWidget {
             height: 10,
           ),
           MultiSelectDropDown(
+            hint: title,
+            dropdownBorderRadius: 20,
             suffixIcon: Icon(
               Icons.arrow_drop_down,
               color: Colors.black.withOpacity(0.6),
@@ -63,9 +65,8 @@ class FormMultiDropDown extends StatelessWidget {
             borderRadius: 20,
             hintFontSize: 16,
             optionTextStyle: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.black.withOpacity(0.40),
-                fontWeight: FontWeight.w600),
+              fontSize: 16,
+            ),
             hintStyle: GoogleFonts.poppins(
                 fontSize: 16,
                 // height: 4,
