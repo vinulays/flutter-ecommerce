@@ -7,7 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CartItemCard extends StatefulWidget {
   final CartItem cartItem;
-  const CartItemCard({super.key, required this.cartItem});
+  final String fromWhere;
+  const CartItemCard(
+      {super.key, required this.cartItem, required this.fromWhere});
 
   @override
   State<CartItemCard> createState() => _CartItemCardState();
@@ -25,7 +27,9 @@ class _CartItemCardState extends State<CartItemCard> {
     var deviceData = MediaQuery.of(context);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: deviceData.size.width * 0.03),
+      margin: (widget.fromWhere == "cart")
+          ? EdgeInsets.symmetric(horizontal: deviceData.size.width * 0.03)
+          : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,45 +92,55 @@ class _CartItemCardState extends State<CartItemCard> {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<ShoppingCartBloc>().add(
-                                      RemoveItemQuantityEvent(
-                                          widget.cartItem.name,
-                                          widget.cartItem.color,
-                                          widget.cartItem.size));
-                                },
-                                child: const Icon(Icons.remove_circle_outline),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "${widget.cartItem.quantity}",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black.withOpacity(0.4)),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<ShoppingCartBloc>().add(
-                                      AddItemQuantityEvent(
-                                          widget.cartItem.name,
-                                          widget.cartItem.color,
-                                          widget.cartItem.size));
-                                },
-                                child: const Icon(Icons.add_circle_outline),
-                              ),
-                            ],
+                        if (widget.fromWhere == "checkout")
+                          Text(
+                            "\$${widget.cartItem.price.toStringAsFixed(2)} x ${widget.cartItem.quantity}",
+                            style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black.withOpacity(0.4)),
                           ),
-                        )
+                        if (widget.fromWhere == "cart")
+                          SizedBox(
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    context.read<ShoppingCartBloc>().add(
+                                        RemoveItemQuantityEvent(
+                                            widget.cartItem.name,
+                                            widget.cartItem.color,
+                                            widget.cartItem.size));
+                                  },
+                                  child:
+                                      const Icon(Icons.remove_circle_outline),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "${widget.cartItem.quantity}",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black.withOpacity(0.4)),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    context.read<ShoppingCartBloc>().add(
+                                        AddItemQuantityEvent(
+                                            widget.cartItem.name,
+                                            widget.cartItem.color,
+                                            widget.cartItem.size));
+                                  },
+                                  child: const Icon(Icons.add_circle_outline),
+                                ),
+                              ],
+                            ),
+                          )
                       ],
                     ),
                   ),
@@ -134,34 +148,35 @@ class _CartItemCardState extends State<CartItemCard> {
               ],
             ),
           ),
-          SizedBox(
-            height: 120,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    context.read<ShoppingCartBloc>().add(RemoveItemEvent(
-                        widget.cartItem.name,
-                        widget.cartItem.color,
-                        widget.cartItem.size));
-                  },
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.red,
+          if (widget.fromWhere == "cart")
+            SizedBox(
+              height: 120,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      context.read<ShoppingCartBloc>().add(RemoveItemEvent(
+                          widget.cartItem.name,
+                          widget.cartItem.color,
+                          widget.cartItem.size));
+                    },
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                   ),
-                ),
-                Text(
-                  "\$${widget.cartItem.price.toStringAsFixed(2)}",
-                  style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black.withOpacity(0.4)),
-                ),
-              ],
-            ),
-          )
+                  Text(
+                    "\$${widget.cartItem.price.toStringAsFixed(2)}",
+                    style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black.withOpacity(0.4)),
+                  ),
+                ],
+              ),
+            )
         ],
       ),
     );
