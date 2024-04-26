@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,16 +59,30 @@ class _ProductDetailsState extends State<ProductDetails> {
           product = state.product;
 
           pages = List.generate(
-              product!.imageURLs.length,
-              (index) => Container(
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(16),
-                      image: DecorationImage(
-                          image: NetworkImage(product!.imageURLs[index]),
-                          fit: BoxFit.cover),
-                      color: Colors.grey.shade300,
-                    ),
-                  ));
+            product!.imageURLs.length,
+            // ignore: avoid_unnecessary_containers
+            (index) => Container(
+              child: CachedNetworkImage(
+                imageUrl: product!.imageURLs[index],
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: ShapeDecoration(
+                    color: Colors.grey.shade300,
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.cover),
+                    shape: const RoundedRectangleBorder(),
+                  ),
+                ),
+                placeholder: (context, url) => const SizedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [CircularProgressIndicator()],
+                  ),
+                ),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
+            ),
+          );
         }
 
         return Scaffold(
