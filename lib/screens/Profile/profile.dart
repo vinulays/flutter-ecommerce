@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,9 +66,32 @@ class _ProfileState extends State<Profile> {
                   children: [
                     if (userLocal?.avatarURL != null &&
                         userLocal?.avatarURL != "")
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(userLocal!.avatarURL!),
+                      // CircleAvatar(
+                      //   radius: 50,
+                      //   backgroundImage: NetworkImage(userLocal!.avatarURL!),
+                      // ),
+                      CachedNetworkImage(
+                        imageUrl: userLocal!.avatarURL!,
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: 110,
+                          width: 110,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        placeholder: (context, url) => const SizedBox(
+                          height: 110,
+                          width: 110,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [CircularProgressIndicator()],
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
                     if (userLocal?.avatarURL == null ||
                         userLocal?.avatarURL == "")

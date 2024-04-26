@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,17 +53,41 @@ class ProductCard extends StatelessWidget {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Container(
-                    height: 170,
-                    width: 170,
-                    decoration: BoxDecoration(
-                      // color: const Color(0xff7279F6),
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(product.thumbnailURL),
+                  // Container(
+                  //   height: 170,
+                  //   width: 170,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(10),
+                  //     image: DecorationImage(
+                  //       fit: BoxFit.cover,
+                  //       image: NetworkImage(product.thumbnailURL),
+                  //     ),
+                  //   ),
+                  // ),
+                  CachedNetworkImage(
+                    imageUrl: product.thumbnailURL,
+                    imageBuilder: (context, imageProvider) => Container(
+                      height: 170,
+                      width: 170,
+                      decoration: ShapeDecoration(
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
+                    placeholder: (context, url) => const SizedBox(
+                      height: 170,
+                      width: 170,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [CircularProgressIndicator()],
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                   Positioned(
                     top: 8,
