@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/form_drop_down.dart';
 import 'package:flutter_ecommerce/ui/form_input_field.dart';
@@ -15,8 +17,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 class ProductForm extends StatefulWidget {
+  final Product? product;
   final bool isUpdate;
-  const ProductForm({super.key, required this.isUpdate});
+  const ProductForm({super.key, required this.isUpdate, this.product});
 
   @override
   State<ProductForm> createState() => _ProductFormState();
@@ -33,6 +36,59 @@ class _ProductFormState extends State<ProductForm> {
   File? _thumbnailImage;
   List<XFile> coverImages = [];
 
+  // * for product updation
+  String thumbnailURL = "";
+  List<String> imageURLs = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.isUpdate && _formKey.currentState != null) {
+        _formKey.currentState!.patchValue({
+          "title": widget.product!.title,
+          "description": widget.product!.description,
+          "price": widget.product!.price.toString(),
+          "isInStock": (widget.product!.isInStock) ? "true" : "false",
+          "categoryId": widget.product!.categoryId
+        });
+      }
+
+      _sizeController.setOptions(const [
+        ValueItem(label: 'Small', value: 'S'),
+        ValueItem(label: 'Medium', value: 'M'),
+        ValueItem(label: 'Large', value: 'L'),
+        ValueItem(label: 'Extra Large', value: 'XL'),
+        ValueItem(label: 'EU 34', value: 'EU 34'),
+        ValueItem(label: 'EU 36', value: 'EU 36'),
+      ]);
+
+      _colorController.setOptions(const [
+        ValueItem(label: 'White', value: 'white'),
+        ValueItem(label: 'Black', value: 'black'),
+        ValueItem(label: 'Blue', value: 'blue'),
+        ValueItem(label: 'Green', value: 'green'),
+        ValueItem(label: 'Red', value: 'red'),
+        ValueItem(label: 'Yellow', value: 'yellow'),
+      ]);
+
+      List<ValueItem> selectedSizeOptions = _sizeController.options
+          .where((option) => widget.product!.sizes.contains(option.value))
+          .toList();
+
+      List<ValueItem> selectedColorOptions = _colorController.options
+          .where((option) => widget.product!.colors.contains(option.value))
+          .toList();
+
+      _sizeController.setSelectedOptions(selectedSizeOptions);
+      _colorController.setSelectedOptions(selectedColorOptions);
+    });
+
+    thumbnailURL = widget.product!.thumbnailURL;
+    imageURLs.addAll(widget.product!.imageURLs);
+  }
+
   Future<void> pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -44,7 +100,9 @@ class _ProductFormState extends State<ProductForm> {
             ?.didChange(_thumbnailImage);
       });
     } else {
-      _formKey.currentState?.fields["thumbnailImage"]?.didChange(null);
+      if (!widget.isUpdate) {
+        _formKey.currentState?.fields["thumbnailImage"]?.didChange(null);
+      }
     }
   }
 
@@ -58,7 +116,9 @@ class _ProductFormState extends State<ProductForm> {
         _formKey.currentState?.fields["coverImages"]?.didChange(coverImages);
       });
     } else {
-      _formKey.currentState?.fields["coverImages"]?.didChange(null);
+      if (!widget.isUpdate) {
+        _formKey.currentState?.fields["coverImages"]?.didChange(null);
+      }
     }
   }
 
@@ -301,7 +361,113 @@ class _ProductFormState extends State<ProductForm> {
                                       ))
                                 ],
                               ),
-                            if (_thumbnailImage != null)
+                            // * Thumbnail image for product update
+                            if (thumbnailURL != "")
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    height: 140,
+                                    width: 140,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(thumbnailURL)),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                  ),
+                                  Positioned(
+                                      top: -5,
+                                      right: -5,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Colors.white,
+                                                  title: Text(
+                                                    "Delete image",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                  content: Text(
+                                                    "Do you want to remove this image from the product?",
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 14),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text(
+                                                          "No",
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize: 14),
+                                                        )),
+                                                    TextButton(
+                                                        onPressed: () async {
+                                                          // * deleting the image from the product document in firestore
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'products')
+                                                              .doc(widget
+                                                                  .product!.id)
+                                                              .update({
+                                                            'thumbnailURL': "",
+                                                          });
+                                                          setState(() {
+                                                            _thumbnailImage =
+                                                                null;
+                                                            thumbnailURL = "";
+
+                                                            _formKey
+                                                                .currentState
+                                                                ?.fields[
+                                                                    "thumbnailImage"]
+                                                                ?.didChange(
+                                                                    null);
+                                                          });
+                                                          if (context.mounted) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          }
+                                                        },
+                                                        child: Text(
+                                                          "Yes",
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize: 14),
+                                                        )),
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        child: Container(
+                                          height: 35,
+                                          width: 35,
+                                          decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              ),
+                            if (_thumbnailImage != null || thumbnailURL != "")
                               const SizedBox(
                                 width: 10,
                               ),
@@ -356,7 +522,8 @@ class _ProductFormState extends State<ProductForm> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: (value) {
-                                if (_thumbnailImage == null) {
+                                if (_thumbnailImage == null &&
+                                    !widget.isUpdate) {
                                   return "Thumbnail photo is required";
                                 }
                                 return null;
@@ -463,7 +630,144 @@ class _ProductFormState extends State<ProductForm> {
                                   );
                                 }),
                               ),
-                            if (coverImages.isNotEmpty)
+                            if (coverImages.isNotEmpty || imageURLs.isNotEmpty)
+                              const SizedBox(
+                                width: 10,
+                              ),
+                            if (imageURLs.isNotEmpty)
+                              Wrap(
+                                spacing: 20,
+                                runSpacing: 20,
+                                children:
+                                    List.generate(imageURLs.length, (index) {
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        height: 140,
+                                        width: 140,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image:
+                                                NetworkImage(imageURLs[index]),
+                                          ),
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      Positioned(
+                                          top: -5,
+                                          right: -5,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      title: Text(
+                                                        "Delete image",
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                      ),
+                                                      content: Text(
+                                                        "Do you want to remove this image from the product?",
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 14),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: Text(
+                                                              "No",
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                      fontSize:
+                                                                          14),
+                                                            )),
+                                                        TextButton(
+                                                            onPressed:
+                                                                () async {
+                                                              await FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'products')
+                                                                  .doc(widget
+                                                                      .product!
+                                                                      .id)
+                                                                  .update({
+                                                                'imageURLs':
+                                                                    FieldValue
+                                                                        .arrayRemove([
+                                                                  imageURLs[
+                                                                      index]
+                                                                ]),
+                                                              });
+                                                              setState(() {
+                                                                imageURLs
+                                                                    .removeAt(
+                                                                        index);
+
+                                                                if (imageURLs
+                                                                    .isEmpty) {
+                                                                  _formKey
+                                                                      .currentState
+                                                                      ?.fields[
+                                                                          "coverImages"]
+                                                                      ?.didChange(
+                                                                          null);
+                                                                }
+                                                              });
+                                                              if (context
+                                                                  .mounted) {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              "Yes",
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                      fontSize:
+                                                                          14),
+                                                            )),
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                            child: Container(
+                                              height: 35,
+                                              width: 35,
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle),
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ))
+                                    ],
+                                  );
+                                }),
+                              ),
+                            if (coverImages.isNotEmpty || imageURLs.isNotEmpty)
                               const SizedBox(
                                 width: 10,
                               ),
@@ -516,7 +820,7 @@ class _ProductFormState extends State<ProductForm> {
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: (value) {
-                                if (coverImages.isEmpty) {
+                                if (coverImages.isEmpty && !widget.isUpdate) {
                                   return "Cover images are required.";
                                 }
 
@@ -547,34 +851,69 @@ class _ProductFormState extends State<ProductForm> {
                           child: TextButton(
                               onPressed: () {
                                 if (_formKey.currentState!.saveAndValidate()) {
-                                  Map<String, dynamic> formData =
-                                      Map.from(_formKey.currentState!.value);
+                                  if (!widget.isUpdate) {
+                                    Map<String, dynamic> formData =
+                                        Map.from(_formKey.currentState!.value);
 
-                                  List<String> sizes = [];
-                                  List<String> colors = [];
+                                    List<String> sizes = [];
+                                    List<String> colors = [];
 
-                                  if (_sizeController
-                                      .selectedOptions.isNotEmpty) {
-                                    for (var option
-                                        in _sizeController.selectedOptions) {
-                                      sizes.add(option.value);
+                                    if (_sizeController
+                                        .selectedOptions.isNotEmpty) {
+                                      for (var option
+                                          in _sizeController.selectedOptions) {
+                                        sizes.add(option.value);
+                                      }
                                     }
-                                  }
 
-                                  if (_colorController
-                                      .selectedOptions.isNotEmpty) {
-                                    for (var option
-                                        in _colorController.selectedOptions) {
-                                      colors.add(option.value);
+                                    if (_colorController
+                                        .selectedOptions.isNotEmpty) {
+                                      for (var option
+                                          in _colorController.selectedOptions) {
+                                        colors.add(option.value);
+                                      }
                                     }
+
+                                    formData['sizes'] = sizes;
+                                    formData['colors'] = colors;
+
+                                    context
+                                        .read<ProductsBloc>()
+                                        .add(AddProductEvent(formData));
+
+                                    // * Going back after the addition
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    // * updating the product
+                                    // ! if coverimages & thumbnail image null, don't update them in firestore
+                                    Map<String, dynamic> formData =
+                                        Map.from(_formKey.currentState!.value);
+
+                                    List<String> sizes = [];
+                                    List<String> colors = [];
+
+                                    if (_sizeController
+                                        .selectedOptions.isNotEmpty) {
+                                      for (var option
+                                          in _sizeController.selectedOptions) {
+                                        sizes.add(option.value);
+                                      }
+                                    }
+
+                                    if (_colorController
+                                        .selectedOptions.isNotEmpty) {
+                                      for (var option
+                                          in _colorController.selectedOptions) {
+                                        colors.add(option.value);
+                                      }
+                                    }
+
+                                    formData['sizes'] = sizes;
+                                    formData['colors'] = colors;
+                                    formData["productId"] = widget.product!.id;
+
+                                    debugPrint(formData.values.toString());
                                   }
-
-                                  formData['sizes'] = sizes;
-                                  formData['colors'] = colors;
-
-                                  context
-                                      .read<ProductsBloc>()
-                                      .add(AddProductEvent(formData));
                                 }
                               },
                               style: ButtonStyle(
