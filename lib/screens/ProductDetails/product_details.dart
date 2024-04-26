@@ -341,14 +341,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "\$200.00",
+                                      "\$150.00",
                                       style: GoogleFonts.poppins(
                                           fontSize: 16,
                                           decoration:
                                               TextDecoration.lineThrough),
                                     ),
                                     Text(
-                                      "\$150.00",
+                                      "\$${product!.price.toStringAsFixed(2)}",
                                       style: GoogleFonts.poppins(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w700),

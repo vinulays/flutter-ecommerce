@@ -631,7 +631,7 @@ class _ProductFormState extends State<ProductForm> {
                                   );
                                 }),
                               ),
-                            if (coverImages.isNotEmpty || imageURLs.isNotEmpty)
+                            if (coverImages.isNotEmpty)
                               const SizedBox(
                                 width: 10,
                               ),
