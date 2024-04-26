@@ -6,6 +6,7 @@ import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
+import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/utils/helper_functions.dart';
@@ -528,13 +529,69 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             );
                                             break;
                                           case 'delete':
-                                            // Navigate to another page for menu item 2
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           Page2()),
-                                            // );
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    title: Text(
+                                                      "Delete product",
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                    ),
+                                                    content: Text(
+                                                      "This action cannot be undone. Do you really want to delete this product?",
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 14),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text(
+                                                            "No",
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        14),
+                                                          )),
+                                                      TextButton(
+                                                          onPressed: () async {
+                                                            context
+                                                                .read<
+                                                                    ProductsBloc>()
+                                                                .add(DeleteProductEvent(
+                                                                    product!
+                                                                        .id!));
+
+                                                            // * going back to home screen after deletion
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text(
+                                                            "Yes",
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        14),
+                                                          )),
+                                                    ],
+                                                  );
+                                                });
                                             break;
                                         }
                                       },
