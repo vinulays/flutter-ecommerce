@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
+import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/form_drop_down.dart';
 import 'package:flutter_ecommerce/ui/form_input_field.dart';
@@ -849,7 +850,7 @@ class _ProductFormState extends State<ProductForm> {
                           width: double.infinity,
                           margin: const EdgeInsets.only(bottom: 20),
                           child: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.saveAndValidate()) {
                                   if (!widget.isUpdate) {
                                     Map<String, dynamic> formData =
@@ -912,7 +913,16 @@ class _ProductFormState extends State<ProductForm> {
                                     formData['colors'] = colors;
                                     formData["productId"] = widget.product!.id;
 
-                                    debugPrint(formData.values.toString());
+                                    context
+                                        .read<ProductsBloc>()
+                                        .add(UpdateProductEvent(formData));
+
+                                    context.read<ProductDetailsBloc>().add(
+                                        FetchProductDetailsEvent(
+                                            widget.product!.id!));
+
+                                    // * Going back to the product details page
+                                    Navigator.of(context).pop();
                                   }
                                 }
                               },

@@ -22,4 +22,8 @@ class ProductRepository {
   Future<void> addProduct(Map<String, dynamic> formData) async {
     await _productService.addProduct(formData);
   }
+
+  Future<void> updateProduct(Map<String, dynamic> formData) async {
+    await _productService.updateProduct(formData);
+  }
 }

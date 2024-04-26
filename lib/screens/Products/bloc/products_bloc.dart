@@ -35,5 +35,18 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         emit(ProductAddingError("Failed to add a product: $e"));
       }
     });
+
+    on<UpdateProductEvent>((event, emit) async {
+      emit(ProductUpdating());
+      try {
+        await _productRepository.updateProduct(event.formData);
+        emit(ProducteUpdated());
+
+        add(FetchProductsEvent());
+      } catch (e) {
+        throw Exception("Failed to update: $e");
+        // emit(ProductUpdatingError("Failed to update product: $e"));
+      }
+    });
   }
 }

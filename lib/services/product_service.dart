@@ -164,7 +164,7 @@ class ProductService {
         "sizes": formData["sizes"],
         "isInStock": bool.parse(formData["isInStock"]),
         "rating": 0,
-        "price": int.parse(formData["price"])
+        "price": double.parse(formData["price"].toString())
       });
     } catch (e) {
       throw Exception("Failed to add product: $e");
@@ -218,7 +218,7 @@ class ProductService {
         "colors": formData["colors"],
         "sizes": formData["sizes"],
         "isInStock": bool.parse(formData["isInStock"]),
-        "price": int.parse(formData["price"])
+        "price": double.parse(formData["price"].toString())
       });
     } catch (e) {
       throw Exception("Failed to update the product: $e");
