@@ -8,15 +8,20 @@ import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
+import 'package:flutter_ecommerce/ui/product_search_delegate.dart';
 import 'package:flutter_ecommerce/ui/products_filter_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoryDetails extends StatefulWidget {
+  final String categoryId;
   final String categoryName;
   final String bannerURL;
 
   const CategoryDetails(
-      {super.key, required this.categoryName, required this.bannerURL});
+      {super.key,
+      required this.categoryName,
+      required this.bannerURL,
+      required this.categoryId});
 
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
@@ -78,6 +83,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
         }
 
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: (state is CategoryLoaded)
               ? Stack(
                   children: [
@@ -259,17 +265,26 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                               ),
                             ),
                             // * back and like button
-                            Container(
-                                height: 40,
-                                width: 40,
-                                margin:
-                                    const EdgeInsets.only(top: 50, right: 25),
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle),
-                                child: const Center(
-                                  child: Icon(Icons.search),
-                                )),
+                            GestureDetector(
+                              onTap: () async {
+                                await showSearch(
+                                    context: context,
+                                    delegate: ProductSearchDelegate(
+                                        categoryId: widget.categoryId,
+                                        categoryName: widget.categoryName));
+                              },
+                              child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  margin:
+                                      const EdgeInsets.only(top: 50, right: 25),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle),
+                                  child: const Center(
+                                    child: Icon(Icons.search),
+                                  )),
+                            ),
                           ],
                         ),
                       ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/category_details.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
+import 'package:flutter_ecommerce/ui/product_search_delegate.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -60,12 +62,19 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Column(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(right: 20),
-                      child: Image.asset(
-                        "assets/icons/search.png",
-                        height: 30,
-                        width: 30,
+                    GestureDetector(
+                      onTap: () async {
+                        await showSearch(
+                            context: context,
+                            delegate: ProductSearchDelegate());
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 20),
+                        child: Image.asset(
+                          "assets/icons/search.png",
+                          height: 30,
+                          width: 30,
+                        ),
                       ),
                     )
                   ],
@@ -196,6 +205,8 @@ class _DashboardState extends State<Dashboard> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CategoryDetails(
+                                          categoryId:
+                                              productCategories[index].id,
                                           categoryName:
                                               productCategories[index].name,
                                           bannerURL: productCategories[index]
