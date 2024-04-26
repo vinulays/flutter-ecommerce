@@ -241,4 +241,33 @@ class ProductService {
       throw Exception('Error uploading image: $e');
     }
   }
+
+  Future<void> deleteProduct(String productId) async {
+    try {
+      DocumentReference productRef =
+          _firestore.collection("products").doc(productId);
+
+      DocumentSnapshot productSnapshot = await productRef.get();
+      List<String> imageURLs =
+          List<String>.from(productSnapshot.get("imageURLs"));
+      String thumbnailURL = productSnapshot.get("thumbnailURL");
+
+      // * deleting the product
+      await productRef.delete();
+
+      // * deleting images
+      String thumbnailFileName =
+          thumbnailURL.split('%2F').last.split('?').first;
+
+      if (!imageURLs.any((url) => url.contains(thumbnailFileName))) {
+        imageURLs.add(thumbnailURL);
+      }
+
+      for (String url in imageURLs) {
+        await _storage.refFromURL(url).delete();
+      }
+    } catch (e) {
+      throw Exception("Failed to delete the product: $e");
+    }
+  }
 }

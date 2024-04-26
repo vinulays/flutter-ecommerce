@@ -56,38 +56,42 @@ class _ProductFormState extends State<ProductForm> {
         });
       }
 
-      _sizeController.setOptions(const [
-        ValueItem(label: 'Small', value: 'S'),
-        ValueItem(label: 'Medium', value: 'M'),
-        ValueItem(label: 'Large', value: 'L'),
-        ValueItem(label: 'Extra Large', value: 'XL'),
-        ValueItem(label: 'EU 34', value: 'EU 34'),
-        ValueItem(label: 'EU 36', value: 'EU 36'),
-      ]);
+      if (widget.isUpdate) {
+        _sizeController.setOptions(const [
+          ValueItem(label: 'Small', value: 'S'),
+          ValueItem(label: 'Medium', value: 'M'),
+          ValueItem(label: 'Large', value: 'L'),
+          ValueItem(label: 'Extra Large', value: 'XL'),
+          ValueItem(label: 'EU 34', value: 'EU 34'),
+          ValueItem(label: 'EU 36', value: 'EU 36'),
+        ]);
 
-      _colorController.setOptions(const [
-        ValueItem(label: 'White', value: 'white'),
-        ValueItem(label: 'Black', value: 'black'),
-        ValueItem(label: 'Blue', value: 'blue'),
-        ValueItem(label: 'Green', value: 'green'),
-        ValueItem(label: 'Red', value: 'red'),
-        ValueItem(label: 'Yellow', value: 'yellow'),
-      ]);
+        _colorController.setOptions(const [
+          ValueItem(label: 'White', value: 'white'),
+          ValueItem(label: 'Black', value: 'black'),
+          ValueItem(label: 'Blue', value: 'blue'),
+          ValueItem(label: 'Green', value: 'green'),
+          ValueItem(label: 'Red', value: 'red'),
+          ValueItem(label: 'Yellow', value: 'yellow'),
+        ]);
 
-      List<ValueItem> selectedSizeOptions = _sizeController.options
-          .where((option) => widget.product!.sizes.contains(option.value))
-          .toList();
+        List<ValueItem> selectedSizeOptions = _sizeController.options
+            .where((option) => widget.product!.sizes.contains(option.value))
+            .toList();
 
-      List<ValueItem> selectedColorOptions = _colorController.options
-          .where((option) => widget.product!.colors.contains(option.value))
-          .toList();
+        List<ValueItem> selectedColorOptions = _colorController.options
+            .where((option) => widget.product!.colors.contains(option.value))
+            .toList();
 
-      _sizeController.setSelectedOptions(selectedSizeOptions);
-      _colorController.setSelectedOptions(selectedColorOptions);
+        _sizeController.setSelectedOptions(selectedSizeOptions);
+        _colorController.setSelectedOptions(selectedColorOptions);
+      }
     });
 
-    thumbnailURL = widget.product!.thumbnailURL;
-    imageURLs.addAll(widget.product!.imageURLs);
+    if (widget.isUpdate) {
+      thumbnailURL = widget.product!.thumbnailURL;
+      imageURLs.addAll(widget.product!.imageURLs);
+    }
   }
 
   Future<void> pickImage() async {
@@ -631,7 +635,7 @@ class _ProductFormState extends State<ProductForm> {
                                   );
                                 }),
                               ),
-                            if (coverImages.isNotEmpty || imageURLs.isNotEmpty)
+                            if (coverImages.isNotEmpty)
                               const SizedBox(
                                 width: 10,
                               ),

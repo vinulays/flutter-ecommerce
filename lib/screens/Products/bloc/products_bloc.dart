@@ -44,8 +44,20 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
         add(FetchProductsEvent());
       } catch (e) {
-        throw Exception("Failed to update: $e");
-        // emit(ProductUpdatingError("Failed to update product: $e"));
+        emit(ProductUpdatingError("Failed to update product: $e"));
+      }
+    });
+
+    on<DeleteProductEvent>((event, emit) async {
+      emit(ProductDeleting());
+
+      try {
+        await _productRepository.deleteProduct(event.productId);
+        emit(ProductDeleted());
+
+        add(FetchProductsEvent());
+      } catch (e) {
+        emit(ProductDeletingError("Failed to delete the product: $e"));
       }
     });
   }
