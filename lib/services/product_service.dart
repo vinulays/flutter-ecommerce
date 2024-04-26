@@ -164,10 +164,64 @@ class ProductService {
         "sizes": formData["sizes"],
         "isInStock": bool.parse(formData["isInStock"]),
         "rating": 0,
-        "price": int.parse(formData["price"])
+        "price": double.parse(formData["price"].toString())
       });
     } catch (e) {
       throw Exception("Failed to add product: $e");
+    }
+  }
+
+  Future<void> updateProduct(Map<String, dynamic> formData) async {
+    String? thumbnailURL;
+    List<String?> coverUrls = [];
+
+    try {
+      if (formData["thumbnailImage"] != null) {
+        thumbnailURL = await uploadImage(formData["thumbnailImage"]);
+        formData["thumbnailImage"] = thumbnailURL;
+      }
+
+      if (formData["coverImages"] != null) {
+        coverUrls = await Future.wait(
+          (formData["coverImages"] as List<XFile>).map(
+            (coverImage) async {
+              try {
+                Reference ref = _storage
+                    .ref()
+                    .child("productImages")
+                    .child(coverImage.name);
+
+                UploadTask uploadTask = ref.putFile(File(coverImage.path));
+
+                String url = await (await uploadTask).ref.getDownloadURL();
+
+                return url;
+              } catch (e) {
+                return null;
+              }
+            },
+          ),
+        );
+
+        formData["coverImages"] = coverUrls;
+      }
+
+      await _firestore
+          .collection("products")
+          .doc(formData["productId"])
+          .update({
+        "title": formData["title"],
+        "description": formData["description"],
+        "categoryId": formData["categoryId"],
+        if (thumbnailURL != null) "thumbnailURL": thumbnailURL,
+        if (coverUrls.isNotEmpty) "imageURLs": FieldValue.arrayUnion(coverUrls),
+        "colors": formData["colors"],
+        "sizes": formData["sizes"],
+        "isInStock": bool.parse(formData["isInStock"]),
+        "price": double.parse(formData["price"].toString())
+      });
+    } catch (e) {
+      throw Exception("Failed to update the product: $e");
     }
   }
 
