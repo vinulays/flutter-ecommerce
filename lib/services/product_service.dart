@@ -270,4 +270,70 @@ class ProductService {
       throw Exception("Failed to delete the product: $e");
     }
   }
+
+  Future<List<Product>> searchProducts(String query) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('products')
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+          .get();
+
+      List<Product> products = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return Product(
+          id: doc.id,
+          title: data['title'],
+          description: data['description'],
+          price: double.parse(data["price"].toString()),
+          rating: double.parse(data['rating'].toString()),
+          categoryId: data["categoryId"],
+          isInStock: data["isInStock"],
+          thumbnailURL: data["thumbnailURL"],
+          imageURLs: List<String>.from(data["imageURLs"]),
+          createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
+        );
+      }).toList();
+
+      return products;
+    } catch (e) {
+      throw Exception('Failed to search products: $e');
+    }
+  }
+
+  Future<List<Product>> searchProductsInCategory(
+      String query, String categoryId) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('products')
+          .where("categoryId", isEqualTo: categoryId)
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+          .get();
+
+      List<Product> products = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return Product(
+          id: doc.id,
+          title: data['title'],
+          description: data['description'],
+          price: double.parse(data["price"].toString()),
+          rating: double.parse(data['rating'].toString()),
+          categoryId: data["categoryId"],
+          isInStock: data["isInStock"],
+          thumbnailURL: data["thumbnailURL"],
+          imageURLs: List<String>.from(data["imageURLs"]),
+          createdAt: data["createdAt"].toDate(),
+          sizes: List<String>.from(data["sizes"]),
+          colors: List<String>.from(data["colors"]),
+        );
+      }).toList();
+
+      return products;
+    } catch (e) {
+      throw Exception('Failed to search products: $e');
+    }
+  }
 }
