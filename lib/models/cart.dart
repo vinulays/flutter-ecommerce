@@ -23,7 +23,13 @@ class Cart {
           item.color == newItem.color &&
           item.size == newItem.size,
       orElse: () => CartItem(
-          name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
+          id: "",
+          name: "",
+          price: 0,
+          quantity: 0,
+          imageUrl: "",
+          size: "",
+          color: ""),
     );
 
     if (existingItem.name.isNotEmpty) {
@@ -52,7 +58,13 @@ class Cart {
       (item) =>
           item.name == itemName && item.color == color && item.size == size,
       orElse: () => CartItem(
-          name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
+          id: "",
+          name: "",
+          price: 0,
+          quantity: 0,
+          imageUrl: "",
+          size: "",
+          color: ""),
     );
 
     if (existingItem.name.isNotEmpty) {
@@ -67,7 +79,13 @@ class Cart {
       (item) =>
           item.name == itemName && item.color == color && item.size == size,
       orElse: () => CartItem(
-          name: "", price: 0, quantity: 0, imageUrl: "", size: "", color: ""),
+          id: "",
+          name: "",
+          price: 0,
+          quantity: 0,
+          imageUrl: "",
+          size: "",
+          color: ""),
     );
 
     if (existingItem.name.isNotEmpty && existingItem.quantity > 1) {
@@ -89,7 +107,7 @@ class Cart {
           size: "",
           color: ""),
     );
-    if (item.id!.isNotEmpty) {
+    if (item.id.isNotEmpty) {
       item.quantity = newQuantity;
       _updateSubTotal();
       _updateTotal();

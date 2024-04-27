@@ -38,11 +38,6 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         onTap: () {
                           Navigator.of(context).pop();
                         },
-                        // child: SvgPicture.asset(
-                        //   "assets/icons/go_back.svg",
-                        //   colorFilter: const ColorFilter.mode(
-                        //       Colors.black, BlendMode.srcIn),
-                        // ),
                         child: const Icon(
                           Icons.chevron_left_outlined,
                           size: 30,
@@ -74,6 +69,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           child: CartItemCard(
                             fromWhere: "cart",
                             cartItem: CartItem(
+                                id: state.cart.items[index].id,
                                 name: state.cart.items[index].name,
                                 imageUrl: state.cart.items[index].imageUrl,
                                 price: state.cart.items[index].price,
@@ -107,40 +103,51 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(
-                    right: deviceData.size.width * 0.05,
-                    left: deviceData.size.width * 0.05,
-                    bottom: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (context) => const Checkout()),
-                      );
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.8),
+              BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
+                builder: (context, state) {
+                  return Container(
+                    margin: EdgeInsets.only(
+                        right: deviceData.size.width * 0.05,
+                        left: deviceData.size.width * 0.05,
+                        bottom: 20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: (state is ShoppingCartLoadedState &&
+                                state.cart.items.isEmpty)
+                            ? null
+                            : () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) => Checkout()),
+                                );
+                              },
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.8),
+                            ),
+                          ),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(vertical: 17.88)),
+                          backgroundColor: (state is ShoppingCartLoadedState &&
+                                  state.cart.items.isNotEmpty)
+                              ? MaterialStateProperty.all<Color>(Colors.black)
+                              : MaterialStateProperty.all(
+                                  Colors.black.withOpacity(0.5)),
+                        ),
+                        child: Text(
+                          "Checkout",
+                          style: GoogleFonts.poppins(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
                         ),
                       ),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 17.88)),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
                     ),
-                    child: Text(
-                      "Checkout",
-                      style: GoogleFonts.poppins(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
+                  );
+                },
               )
             ],
           ),

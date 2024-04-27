@@ -394,6 +394,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 .add(
                                                   AddItemEvent(
                                                     CartItem(
+                                                        id: product!.id!,
                                                         name: product!.title,
                                                         price: product!.price,
                                                         imageUrl: product!
