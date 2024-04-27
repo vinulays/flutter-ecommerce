@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
+import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/ui/address_bottom_sheet.dart';
 import 'package:flutter_ecommerce/ui/cart_item_card.dart';
@@ -108,6 +109,8 @@ class _CheckoutState extends State<Checkout> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            context.read<UserBloc>().add(FetchAddresses());
+
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(),

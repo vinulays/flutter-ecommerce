@@ -8,17 +8,20 @@ import 'package:flutter_ecommerce/firebase_options.dart';
 import 'package:flutter_ecommerce/repositories/auth_repository.dart';
 import 'package:flutter_ecommerce/repositories/cart_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
+import 'package:flutter_ecommerce/repositories/user_repository.dart';
 import 'package:flutter_ecommerce/repositories/wishlist_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
+import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/services/auth_service.dart';
 import 'package:flutter_ecommerce/services/cart_service.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
+import 'package:flutter_ecommerce/services/user_service.dart';
 import 'package:flutter_ecommerce/services/wishlist_service.dart';
 
 void main() async {
@@ -96,6 +99,16 @@ class MyApp extends StatelessWidget {
               authService: AuthService(
                   firebaseAuth: FirebaseAuth.instance,
                   firestore: FirebaseFirestore.instance),
+            ),
+          ),
+        ),
+        // * User details bloc provider
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(
+            userRepository: UserRepository(
+              userService: UserService(
+                  firestore: FirebaseFirestore.instance,
+                  firebaseAuth: FirebaseAuth.instance),
             ),
           ),
         )

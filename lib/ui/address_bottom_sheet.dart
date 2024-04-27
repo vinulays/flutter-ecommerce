@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
+import 'package:flutter_ecommerce/screens/AddressForm/address_form.dart';
+import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddressBottomSheet extends StatefulWidget {
@@ -29,10 +30,10 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
     var deviceData = MediaQuery.of(context);
     List<String> addresses = [];
 
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+    return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        if (state is AuthenticationAuthenticated) {
-          addresses = state.user.addresses!;
+        if (state is AddressesLoaded) {
+          addresses = state.addresses;
         }
         return Container(
           decoration: const BoxDecoration(color: Colors.white),
@@ -158,12 +159,19 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                               const SizedBox(
                                 width: 5,
                               ),
-                              Text(
-                                "Add new address",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddressForm()));
+                                },
+                                child: Text(
+                                  "Add new address",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black),
+                                ),
                               ),
                             ],
                           ),
