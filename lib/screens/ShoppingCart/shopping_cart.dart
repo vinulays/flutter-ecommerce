@@ -74,6 +74,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           child: CartItemCard(
                             fromWhere: "cart",
                             cartItem: CartItem(
+                                id: state.cart.items[index].id,
                                 name: state.cart.items[index].name,
                                 imageUrl: state.cart.items[index].imageUrl,
                                 price: state.cart.items[index].price,

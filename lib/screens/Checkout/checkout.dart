@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
+import 'package:flutter_ecommerce/models/order.dart';
+import 'package:flutter_ecommerce/screens/OrderSuccess/order_success.dart';
+import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/ui/address_bottom_sheet.dart';
@@ -34,6 +38,11 @@ class _CheckoutState extends State<Checkout> {
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
+
+    bool isButtonDisable() {
+      return selectedAddress == "Select an Address" ||
+          selectedPaymentMethod == "Select a Payment Method";
+    }
 
     return BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
       builder: (context, state) {
@@ -94,6 +103,7 @@ class _CheckoutState extends State<Checkout> {
                                 child: CartItemCard(
                                   fromWhere: "checkout",
                                   cartItem: CartItem(
+                                      id: state.cart.items[index].id,
                                       name: state.cart.items[index].name,
                                       imageUrl:
                                           state.cart.items[index].imageUrl,
@@ -378,7 +388,31 @@ class _CheckoutState extends State<Checkout> {
                           child: SizedBox(
                             width: double.infinity,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: isButtonDisable()
+                                  ? null
+                                  : () async {
+                                      OrderLocal order = OrderLocal(
+                                          customerId: FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                          address: selectedAddress,
+                                          paymentMethod: selectedPaymentMethod,
+                                          productIds: state.cart.items
+                                              .map((item) => item.id)
+                                              .toList(),
+                                          cost: state.cart.total);
+
+                                      context
+                                          .read<OrdersBloc>()
+                                          .add(AddOrderEvent(order));
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const OrderSuccess(),
+                                        ),
+                                      );
+                                    },
                               style: ButtonStyle(
                                 shape: MaterialStateProperty.all<
                                     RoundedRectangleBorder>(
@@ -389,9 +423,10 @@ class _CheckoutState extends State<Checkout> {
                                 padding: MaterialStateProperty.all(
                                     const EdgeInsets.symmetric(
                                         vertical: 17.88)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.black),
+                                backgroundColor: isButtonDisable()
+                                    ? MaterialStateProperty.all<Color>(
+                                        Colors.black.withOpacity(0.5))
+                                    : MaterialStateProperty.all(Colors.black),
                               ),
                               child: Text(
                                 "Pay \$300.00",
