@@ -31,8 +31,10 @@ class OrderService {
               customerId: data["customerId"],
               address: data["address"],
               paymentMethod: data["paymentMethod"],
-              productIds: List<String>.from(data["productIds"]),
-              cost: double.parse(data["cost"].toString()));
+              productQuantityMap:
+                  Map<String, int>.from(data["productQuantityMap"]),
+              cost: double.parse(data["cost"].toString()),
+              createdAt: data["createdAt"].toDate());
 
           orders.add(order);
         }
@@ -52,8 +54,9 @@ class OrderService {
         "customerId": order.customerId,
         "address": order.address,
         "paymentMethod": order.paymentMethod,
-        "productIds": order.productIds,
-        "cost": order.cost
+        "productQuantityMap": order.productQuantityMap,
+        "cost": order.cost,
+        "createdAt": order.createdAt
       });
     } catch (e) {
       throw Exception("Failed to add order: $e");
