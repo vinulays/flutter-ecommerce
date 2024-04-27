@@ -97,6 +97,9 @@ flutter:
     - assets/icons/search.png
     - assets/icons/google.svg
     - assets/icons/facebook.svg
+    - assets/icons/visa.svg
+    - assets/icons/gpay.svg
+    - assets/icons/applepay.svg
     - assets/images/promo-banner.jpg
     - assets/images/headphone-banner.jpg
     - assets/images/watch-banner.jpg
@@ -108,6 +111,10 @@ flutter:
     - assets/images/tshirt.png
     - assets/images/chair.png
     - assets/icons/empty-folder.png
+    - assets/icons/visa-logo.png
+    - assets/icons/gpay-logo.png
+    - assets/icons/applepay-logo.png
+    - assets/icons/mastercard-logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

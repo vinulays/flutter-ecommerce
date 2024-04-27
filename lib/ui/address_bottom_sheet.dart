@@ -79,6 +79,16 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                     const SizedBox(
                       height: 25,
                     ),
+                    if (addresses.isEmpty)
+                      SizedBox(
+                        height: 100,
+                        child: Center(
+                          child: Text(
+                            "No addresses found.",
+                            style: GoogleFonts.poppins(fontSize: 14),
+                          ),
+                        ),
+                      ),
                     Column(
                       children: addresses.map((address) {
                         List<String> parts = address.split('-');
@@ -98,7 +108,8 @@ class _AddressBottomSheetState extends State<AddressBottomSheet> {
                             color: Colors.grey.withOpacity(0.1),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 12),
                             child: RadioListTile<String>(
                               subtitle: Text(
                                 "$personName, $contactNumber",

@@ -60,7 +60,7 @@ class AuthService {
         "role": role,
         "likedProducts": [],
         "avatarURL": "",
-        "address": "",
+        "addresses": [],
       });
     } catch (e) {
       throw Exception('Failed to sign up: $e');
@@ -98,6 +98,7 @@ class AuthService {
           'username': displayName,
           'likedProducts': [],
           'role': "user",
+          'addresses': []
         });
       }
 
@@ -134,7 +135,8 @@ class AuthService {
               "avatarURL": user.photoURL,
               "username": user.displayName!.split(' ')[0],
               "role": "user",
-              "likedProducts": []
+              "likedProducts": [],
+              'addresses': []
             });
           }
 
