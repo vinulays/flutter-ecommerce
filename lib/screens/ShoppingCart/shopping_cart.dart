@@ -15,18 +15,12 @@ class ShoppingCart extends StatefulWidget {
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
-  List<CartItem> items = [];
-  int cartTotal = 0;
-
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
     return BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
       builder: (context, state) {
-        if (state is ShoppingCartLoadedState) {
-          cartTotal = (state.cart.total * 100).truncate();
-        }
         return Scaffold(
           body: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,

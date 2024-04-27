@@ -7,7 +7,7 @@ class UserLocal {
   String displayName;
   String username;
   String? contactNo;
-  String? address;
+  List<String>? addresses;
   List<String> likedProducts;
   String? role;
 
@@ -18,7 +18,7 @@ class UserLocal {
       required this.displayName,
       required this.username,
       this.contactNo,
-      this.address,
+      this.addresses,
       required this.likedProducts,
       required this.role});
 
@@ -32,7 +32,7 @@ class UserLocal {
         displayName: data['displayName'],
         username: data['username'],
         contactNo: data['contactNo'],
-        address: data['address'],
+        addresses: List<String>.from(data['addresses']),
         likedProducts: List<String>.from(
           data['likedProducts'],
         ),
