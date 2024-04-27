@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
 import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/ui/address_bottom_sheet.dart';
 import 'package:flutter_ecommerce/ui/cart_item_card.dart';
+import 'package:flutter_ecommerce/ui/payment_methods_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Checkout extends StatefulWidget {
@@ -18,10 +17,17 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   String selectedAddress = "Select an Address";
+  String selectedPaymentMethod = "Select a Payment Method";
 
   void applyAddress(String address) {
     setState(() {
       selectedAddress = address;
+    });
+  }
+
+  void applyPaymentMethod(String paymentMethod) {
+    setState(() {
+      selectedPaymentMethod = paymentMethod;
     });
   }
 
@@ -180,38 +186,63 @@ class _CheckoutState extends State<Checkout> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey.withOpacity(0.1),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 17),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.credit_card,
-                                      color: Colors.black.withOpacity(0.5),
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(
-                                      "Visa **4853",
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          color: Colors.black.withOpacity(0.8)),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.chevron_right_rounded,
-                                    size: 30,
-                                    color: Colors.black.withOpacity(0.6))
-                              ],
+                        GestureDetector(
+                          onTap: () {
+                            context.read<UserBloc>().add(FetchAddresses());
+
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(),
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Wrap(
+                                    children: [
+                                      PaymentMethodBottomSheet(
+                                        initialSelectedPaymentMethod:
+                                            selectedPaymentMethod,
+                                        applyPaymentMethodCallback:
+                                            applyPaymentMethod,
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.grey.withOpacity(0.1),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 17),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.credit_card,
+                                        color: Colors.black.withOpacity(0.5),
+                                      ),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        selectedPaymentMethod,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            color:
+                                                Colors.black.withOpacity(0.8)),
+                                      ),
+                                    ],
+                                  ),
+                                  Icon(Icons.chevron_right_rounded,
+                                      size: 30,
+                                      color: Colors.black.withOpacity(0.6))
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -316,7 +347,7 @@ class _CheckoutState extends State<Checkout> {
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                             Text(
-                              "\$100.00",
+                              "\$30.00",
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                           ],
