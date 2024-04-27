@@ -3,14 +3,16 @@ class OrderLocal {
   String customerId;
   String address;
   String paymentMethod;
-  List<String> productIds;
+  Map<String, int> productQuantityMap;
   double cost;
+  DateTime createdAt;
 
   OrderLocal(
       {this.id,
       required this.customerId,
       required this.address,
       required this.paymentMethod,
-      required this.productIds,
-      required this.cost});
+      required this.productQuantityMap,
+      required this.cost,
+      required this.createdAt});
 }

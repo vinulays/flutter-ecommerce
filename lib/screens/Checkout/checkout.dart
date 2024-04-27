@@ -442,10 +442,16 @@ class _CheckoutState extends State<Checkout> {
                                               .instance.currentUser!.uid,
                                           address: selectedAddress,
                                           paymentMethod: selectedPaymentMethod,
-                                          productIds: state.cart.items
-                                              .map((item) => item.id)
-                                              .toList(),
-                                          cost: totalCost);
+                                          productQuantityMap: state.cart.items
+                                              .fold<Map<String, int>>(
+                                            {},
+                                            (map, item) {
+                                              map[item.id] = item.quantity;
+                                              return map;
+                                            },
+                                          ),
+                                          cost: totalCost,
+                                          createdAt: DateTime.now());
 
                                       context
                                           .read<OrdersBloc>()

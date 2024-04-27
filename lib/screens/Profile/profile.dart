@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
+import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
+import 'package:flutter_ecommerce/screens/Orders/orders.dart';
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -159,18 +162,28 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "My Orders",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        context.read<OrdersBloc>().add(FetchOrdersEvent());
+
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Orders()),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "My Orders",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.6)),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 30, color: Colors.black.withOpacity(0.6))
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 15,
