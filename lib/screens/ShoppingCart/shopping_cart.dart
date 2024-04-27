@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
+import 'package:flutter_ecommerce/screens/Checkout/checkout.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/ui/cart_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,18 +15,12 @@ class ShoppingCart extends StatefulWidget {
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
-  List<CartItem> items = [];
-  int cartTotal = 0;
-
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
     return BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
       builder: (context, state) {
-        if (state is ShoppingCartLoadedState) {
-          cartTotal = (state.cart.total * 100).truncate();
-        }
         return Scaffold(
           body: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,6 +72,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 30),
                           child: CartItemCard(
+                            fromWhere: "cart",
                             cartItem: CartItem(
                                 name: state.cart.items[index].name,
                                 imageUrl: state.cart.items[index].imageUrl,
@@ -120,7 +116,10 @@ class _ShoppingCartState extends State<ShoppingCart> {
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {
-                      // payment();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const Checkout()),
+                      );
                     },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
