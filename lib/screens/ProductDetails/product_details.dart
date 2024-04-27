@@ -9,6 +9,7 @@ import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bl
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/utils/helper_functions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -406,6 +407,142 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                             colorValue!]),
                                                   ),
                                                 );
+
+                                            showModalBottomSheet(
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.vertical(
+                                                    top: Radius.circular(20),
+                                                  ),
+                                                ),
+                                                clipBehavior:
+                                                    Clip.antiAliasWithSaveLayer,
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  var deviceData =
+                                                      MediaQuery.of(context);
+
+                                                  return Container(
+                                                    width: double.infinity,
+                                                    color: Colors.white,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            const SizedBox(
+                                                              height: 40,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 130,
+                                                              width: 130,
+                                                              child: Image.asset(
+                                                                  "assets/icons/payment-success.png"),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 20,
+                                                            ),
+                                                            Text(
+                                                              "Product added to cart!",
+                                                              style: GoogleFonts.poppins(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 20,
+                                                            ),
+                                                            Text(
+                                                              "Thank you for adding the item to your cart :)",
+                                                              style: GoogleFonts.poppins(
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.5)),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Container(
+                                                          margin: EdgeInsets.only(
+                                                              right: deviceData
+                                                                      .size
+                                                                      .width *
+                                                                  0.05,
+                                                              left: deviceData
+                                                                      .size
+                                                                      .width *
+                                                                  0.05,
+                                                              bottom: 20),
+                                                          child: SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            child: TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pushReplacement(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            const ShoppingCart(
+                                                                      fromWhere:
+                                                                          "productDetails",
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              style:
+                                                                  ButtonStyle(
+                                                                shape: MaterialStateProperty
+                                                                    .all<
+                                                                        RoundedRectangleBorder>(
+                                                                  RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16.8),
+                                                                  ),
+                                                                ),
+                                                                padding: MaterialStateProperty.all(
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        vertical:
+                                                                            17.88)),
+                                                                backgroundColor:
+                                                                    MaterialStateProperty.all<
+                                                                            Color>(
+                                                                        Colors
+                                                                            .black),
+                                                              ),
+                                                              child: Text(
+                                                                "View shopping cart",
+                                                                style: GoogleFonts.poppins(
+                                                                    fontSize:
+                                                                        19,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                });
                                           },
                                     icon: const Icon(
                                       Icons.shopping_cart_outlined,
