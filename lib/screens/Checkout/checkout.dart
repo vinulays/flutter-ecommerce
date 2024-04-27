@@ -7,13 +7,15 @@ import 'package:flutter_ecommerce/screens/OrderSuccess/order_success.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/services/promocode_service.dart';
 import 'package:flutter_ecommerce/ui/address_bottom_sheet.dart';
 import 'package:flutter_ecommerce/ui/cart_item_card.dart';
 import 'package:flutter_ecommerce/ui/payment_methods_bottom_sheet.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Checkout extends StatefulWidget {
-  const Checkout({super.key});
+  final PromoCodeService promoCodeService = PromoCodeService();
+  Checkout({super.key});
 
   @override
   State<Checkout> createState() => _CheckoutState();
@@ -22,6 +24,12 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   String selectedAddress = "Select an Address";
   String selectedPaymentMethod = "Select a Payment Method";
+  double totalCost = 0;
+  double discount = 0;
+  double shippingCost = 30;
+  final promoCodeController = TextEditingController();
+
+  bool totalFetched = false;
 
   void applyAddress(String address) {
     setState(() {
@@ -33,6 +41,35 @@ class _CheckoutState extends State<Checkout> {
     setState(() {
       selectedPaymentMethod = paymentMethod;
     });
+  }
+
+  void applyDiscount(
+      double totalCostInput, double shippingCost, String promoCode) async {
+    bool isUserHasUsedPromoCode =
+        await widget.promoCodeService.hasUserUsedPromoCode(promoCode);
+
+    if (!isUserHasUsedPromoCode) {
+      double promoCodeDiscount =
+          await widget.promoCodeService.getDiscountAmount(promoCode);
+
+      double discountPercentage = promoCodeDiscount;
+      double discountAmount = totalCostInput * discountPercentage;
+
+      double discountedTotalCost = totalCostInput - discountAmount;
+
+      setState(() {
+        discount = discountAmount;
+        totalCost = discountedTotalCost;
+      });
+
+      await widget.promoCodeService.usePromoCode(promoCode);
+    }
+  }
+
+  @override
+  void dispose() {
+    promoCodeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,6 +84,11 @@ class _CheckoutState extends State<Checkout> {
     return BlocBuilder<ShoppingCartBloc, ShoppingCartState>(
       builder: (context, state) {
         if (state is ShoppingCartLoadedState) {
+          if (!totalFetched) {
+            totalCost = state.cart.total + shippingCost;
+            totalFetched = true;
+          }
+
           return Scaffold(
             body: Container(
               margin: EdgeInsets.symmetric(
@@ -260,6 +302,7 @@ class _CheckoutState extends State<Checkout> {
                           height: 20,
                         ),
                         TextField(
+                          controller: promoCodeController,
                           decoration: InputDecoration(
                               suffixIcon: Container(
                                 margin: const EdgeInsets.only(right: 10),
@@ -276,7 +319,10 @@ class _CheckoutState extends State<Checkout> {
                                       backgroundColor:
                                           MaterialStateProperty.all(
                                               Colors.black)),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    applyDiscount(totalCost, shippingCost,
+                                        promoCodeController.text);
+                                  },
                                   child: Text(
                                     "Apply",
                                     style: GoogleFonts.poppins(
@@ -341,7 +387,7 @@ class _CheckoutState extends State<Checkout> {
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                             Text(
-                              "-\$20.00",
+                              "-\$${discount.toStringAsFixed(2)}",
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                           ],
@@ -357,7 +403,7 @@ class _CheckoutState extends State<Checkout> {
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                             Text(
-                              "\$30.00",
+                              "\$${shippingCost.toStringAsFixed(2)}",
                               style: GoogleFonts.poppins(fontSize: 16),
                             ),
                           ],
@@ -374,7 +420,7 @@ class _CheckoutState extends State<Checkout> {
                                   fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              "\$300.00",
+                              "\$${totalCost.toStringAsFixed(2)}",
                               style: GoogleFonts.poppins(
                                   fontSize: 16, fontWeight: FontWeight.w600),
                             ),
@@ -399,11 +445,15 @@ class _CheckoutState extends State<Checkout> {
                                           productIds: state.cart.items
                                               .map((item) => item.id)
                                               .toList(),
-                                          cost: state.cart.total);
+                                          cost: totalCost);
 
                                       context
                                           .read<OrdersBloc>()
                                           .add(AddOrderEvent(order));
+
+                                      context
+                                          .read<ShoppingCartBloc>()
+                                          .add(ResetCartEvent());
 
                                       Navigator.push(
                                         context,
@@ -429,7 +479,7 @@ class _CheckoutState extends State<Checkout> {
                                     : MaterialStateProperty.all(Colors.black),
                               ),
                               child: Text(
-                                "Pay \$300.00",
+                                "Pay \$${totalCost.toStringAsFixed(2)}",
                                 style: GoogleFonts.poppins(
                                     fontSize: 19,
                                     fontWeight: FontWeight.w700,
