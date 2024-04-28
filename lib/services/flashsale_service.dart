@@ -17,6 +17,33 @@ class FlashSaleService {
     }
   }
 
+  Future<List<FlashSale>> getAllFlashSales() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await _firestore.collection('flash_sales').get();
+
+      List<FlashSale> flashSales = [];
+
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        FlashSale flashSale = FlashSale(
+          id: doc.id,
+          endDateTime: data["endDateTime"].toDate(),
+          productIds: List<String>.from(data["productIds"]),
+          discountPercentage: double.parse(
+            data["discountPercentage"].toString(),
+          ),
+        );
+
+        flashSales.add(flashSale);
+      }
+
+      return flashSales;
+    } catch (e) {
+      throw Exception("Failed to fetch flash sales");
+    }
+  }
+
   Future<FlashSale?> getCurrentFlashSale() async {
     final currentTime = Jiffy.parse(DateTime.now().toString());
 

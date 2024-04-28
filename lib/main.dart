@@ -7,11 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/firebase_options.dart';
 import 'package:flutter_ecommerce/repositories/auth_repository.dart';
 import 'package:flutter_ecommerce/repositories/cart_repository.dart';
+import 'package:flutter_ecommerce/repositories/flashsale_repository.dart';
 import 'package:flutter_ecommerce/repositories/order_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
 import 'package:flutter_ecommerce/repositories/user_repository.dart';
 import 'package:flutter_ecommerce/repositories/wishlist_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
+import 'package:flutter_ecommerce/screens/FlashSales/bloc/flashsale_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
@@ -22,6 +24,7 @@ import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.d
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/services/auth_service.dart';
 import 'package:flutter_ecommerce/services/cart_service.dart';
+import 'package:flutter_ecommerce/services/flashsale_service.dart';
 import 'package:flutter_ecommerce/services/order_service.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
 import 'package:flutter_ecommerce/services/user_service.dart';
@@ -122,6 +125,14 @@ class MyApp extends StatelessWidget {
               orderService: OrderService(
                   firestore: FirebaseFirestore.instance,
                   firebaseAuth: FirebaseAuth.instance),
+            ),
+          ),
+        ),
+        // * flash sale bloc provider
+        BlocProvider<FlashsaleBloc>(
+          create: (context) => FlashsaleBloc(
+            flashSaleRepository: FlashSaleRepository(
+              flashSaleService: FlashSaleService(),
             ),
           ),
         )
