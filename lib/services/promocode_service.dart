@@ -92,6 +92,8 @@ class PromoCodeService {
           });
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      throw Exception("Failed to use promo code: $e");
+    }
   }
 }

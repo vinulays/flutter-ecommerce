@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/order.dart';
 import 'package:flutter_ecommerce/models/product.dart';
+import 'package:flutter_ecommerce/screens/OrderDetails/order_details.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -266,18 +267,31 @@ class _OrdersState extends State<Orders> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "View All",
-                                      style: GoogleFonts.poppins(fontSize: 15),
-                                    ),
-                                    const Icon(
-                                      Icons.chevron_right_outlined,
-                                    )
-                                  ],
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) => OrderDetails(
+                                                order: orders[index],
+                                              )),
+                                    );
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "View All",
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 15),
+                                      ),
+                                      const Icon(
+                                        Icons.chevron_right_outlined,
+                                      )
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
