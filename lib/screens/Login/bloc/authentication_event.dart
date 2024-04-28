@@ -51,3 +51,15 @@ class LogoutRequested extends AuthenticationEvent {
 
   LogoutRequested(this.context);
 }
+
+class ChangeUsernameEvent extends AuthenticationEvent {
+  final String username;
+
+  ChangeUsernameEvent(this.username);
+}
+
+class ChangePhoneNumberEvent extends AuthenticationEvent {
+  final String phoneNumber;
+
+  ChangePhoneNumberEvent(this.phoneNumber);
+}
