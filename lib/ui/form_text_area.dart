@@ -55,16 +55,18 @@ class FormTextArea extends StatelessWidget {
           FormBuilderTextField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             keyboardType: TextInputType.multiline,
-            maxLines: null,
+            maxLines: 5,
             name: formBuilderName,
             style: GoogleFonts.poppins(),
             decoration: InputDecoration(
+                contentPadding: EdgeInsets.zero,
                 errorStyle: GoogleFonts.poppins(
                     fontSize: 14, color: const Color(0xffba000d)),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 // isDense: true,
-                prefix: Container(
-                  width: 10,
+                prefix: const SizedBox(
+                  height: 30,
+                  width: 15,
                 ),
                 focusedBorder: OutlineInputBorder(
                     borderSide:
@@ -79,6 +81,7 @@ class FormTextArea extends StatelessWidget {
                         BorderSide(color: Colors.black.withOpacity(0.15)),
                     borderRadius: BorderRadius.circular(20)),
                 hintStyle: GoogleFonts.poppins(
+                    height: 0,
                     color: Colors.black.withOpacity(0.40),
                     fontWeight: FontWeight.w600),
                 hintText: title),

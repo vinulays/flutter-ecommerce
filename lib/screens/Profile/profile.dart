@@ -8,6 +8,7 @@ import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/Orders/orders.dart';
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
+import 'package:flutter_ecommerce/screens/PromoCodeForm/promocode_form.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -164,7 +165,11 @@ class _ProfileState extends State<Profile> {
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
-                        context.read<OrdersBloc>().add(FetchOrdersEvent());
+                        if (userLocal!.role != "admin") {
+                          context.read<OrdersBloc>().add(FetchOrdersEvent());
+                        } else {
+                          context.read<OrdersBloc>().add(FetchAllOrdersEvent());
+                        }
 
                         Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Orders()),
@@ -174,7 +179,9 @@ class _ProfileState extends State<Profile> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "My Orders",
+                            (userLocal!.role == "admin")
+                                ? "All Orders"
+                                : "My Orders",
                             style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 color: Colors.black.withOpacity(0.6)),
@@ -184,25 +191,46 @@ class _ProfileState extends State<Profile> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const ShoppingCart(
-                              fromWhere: "profile",
+                    if (userLocal!.role == "user")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (userLocal!.role == "user")
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ShoppingCart(
+                                fromWhere: "profile",
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      child: Row(
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Shopping Cart",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                            Icon(Icons.chevron_right_rounded,
+                                size: 30, color: Colors.black.withOpacity(0.6))
+                          ],
+                        ),
+                      ),
+                    if (userLocal!.role == "user")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (userLocal!.role == "user")
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Shopping Cart",
+                            "My Address",
                             style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 color: Colors.black.withOpacity(0.6)),
@@ -211,23 +239,6 @@ class _ProfileState extends State<Profile> {
                               size: 30, color: Colors.black.withOpacity(0.6))
                         ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "My Address",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
-                    ),
                     if (userLocal!.role == "admin")
                       const SizedBox(
                         height: 15,
@@ -249,6 +260,34 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Text(
                               "Add a product",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                            Icon(Icons.chevron_right_rounded,
+                                size: 30, color: Colors.black.withOpacity(0.6))
+                          ],
+                        ),
+                      ),
+                    if (userLocal!.role == "admin")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (userLocal!.role == "admin")
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PromoCodeForm(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Add a promo code",
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: Colors.black.withOpacity(0.6)),

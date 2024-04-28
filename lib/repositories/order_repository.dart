@@ -11,6 +11,10 @@ class OrderRepository {
     return _orderService.getOrdersByUserId();
   }
 
+  Future<List<OrderLocal>> getAllOrders() async {
+    return _orderService.getAllOrders();
+  }
+
   Future<void> addOrder(OrderLocal order) async {
     await _orderService.addOrder(order);
   }

@@ -23,6 +23,17 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       }
     });
 
+    on<FetchAllOrdersEvent>((event, emit) async {
+      emit(OrdersLoading());
+
+      try {
+        final orders = await _orderRepository.getAllOrders();
+        emit(OrdersLoaded(orders));
+      } catch (e) {
+        emit(OrdersLoadingError("Failed to fetch orders: $e"));
+      }
+    });
+
     on<AddOrderEvent>((event, emit) async {
       emit(OrderAdding());
 

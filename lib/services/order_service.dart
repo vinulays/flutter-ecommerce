@@ -48,6 +48,32 @@ class OrderService {
     }
   }
 
+  Future<List<OrderLocal>> getAllOrders() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('orders').get();
+
+      List<OrderLocal> orders = [];
+      for (var doc in querySnapshot.docs) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        OrderLocal order = OrderLocal(
+            id: doc.id,
+            customerId: data["customerId"],
+            address: data["address"],
+            paymentMethod: data["paymentMethod"],
+            productQuantityMap:
+                Map<String, int>.from(data["productQuantityMap"]),
+            cost: double.parse(data["cost"].toString()),
+            createdAt: data["createdAt"].toDate());
+
+        orders.add(order);
+      }
+
+      return orders;
+    } catch (e) {
+      throw Exception("Failed to fetch orders: $e");
+    }
+  }
+
   Future<void> addOrder(OrderLocal order) async {
     try {
       await _firestore.collection("orders").add({
