@@ -63,3 +63,10 @@ class ChangePhoneNumberEvent extends AuthenticationEvent {
 
   ChangePhoneNumberEvent(this.phoneNumber);
 }
+
+class ChangePasswordEvent extends AuthenticationEvent {
+  final String currentPassword;
+  final String newPassword;
+
+  ChangePasswordEvent(this.currentPassword, this.newPassword);
+}

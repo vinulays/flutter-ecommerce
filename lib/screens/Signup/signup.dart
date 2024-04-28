@@ -26,13 +26,13 @@ class _SignupState extends State<Signup> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is SignUpSuccess) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Login()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const Login()));
         }
 
         if (state is AuthenticationAuthenticated) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Home()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const Home()));
         }
       },
       child: Scaffold(
@@ -511,9 +511,7 @@ class _SignupState extends State<Signup> {
                             AuthenticationState>(
                           builder: (context, state) {
                             if (state is SignUpInProgress ||
-                                state is SignUpSuccess ||
-                                state is AuthenticationAuthenticated ||
-                                state is AuthenticationLoading) {
+                                state is SignUpSuccess) {
                               return const SizedBox(
                                 height: 27,
                                 width: 27,

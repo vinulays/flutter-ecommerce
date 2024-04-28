@@ -108,5 +108,14 @@ class AuthenticationBloc
         throw Exception("Failed to update phone number: $e");
       }
     });
+
+    on<ChangePasswordEvent>((event, emit) async {
+      try {
+        await _authRepository.changePassword(
+            event.currentPassword, event.newPassword);
+      } catch (e) {
+        throw Exception("Failed to change password: $e");
+      }
+    });
   }
 }

@@ -47,4 +47,9 @@ class AuthRepository {
   Future<UserLocal?> changePhoneNumber(String phoneNumber) async {
     return _authService.chanePhoneNumber(phoneNumber);
   }
+
+  Future<void> changePassword(
+      String currentPassword, String newPassword) async {
+    await _authService.changePassword(currentPassword, newPassword);
+  }
 }
