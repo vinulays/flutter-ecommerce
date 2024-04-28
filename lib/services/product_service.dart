@@ -31,6 +31,8 @@ class ProductService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating']
               .toString()), // * converting firebase number format to double format
           categoryId: data["categoryId"],
@@ -40,6 +42,7 @@ class ProductService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );
@@ -66,6 +69,8 @@ class ProductService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating']
               .toString()), // * converting firebase number format to double format
           categoryId: data["categoryId"],
@@ -75,6 +80,7 @@ class ProductService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );
@@ -106,6 +112,8 @@ class ProductService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating']
               .toString()), // * converting firebase number format to double format
           categoryId: data["categoryId"],
@@ -115,6 +123,7 @@ class ProductService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );
@@ -164,7 +173,9 @@ class ProductService {
         "sizes": formData["sizes"],
         "isInStock": bool.parse(formData["isInStock"]),
         "rating": 0,
-        "price": double.parse(formData["price"].toString())
+        "price": double.parse(formData["price"].toString()),
+        "discountPercentage": 0,
+        "discountEndDateTime": DateTime.now()
       });
     } catch (e) {
       throw Exception("Failed to add product: $e");
@@ -286,12 +297,15 @@ class ProductService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating'].toString()),
           categoryId: data["categoryId"],
           isInStock: data["isInStock"],
           thumbnailURL: data["thumbnailURL"],
           imageURLs: List<String>.from(data["imageURLs"]),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );
@@ -320,12 +334,15 @@ class ProductService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating'].toString()),
           categoryId: data["categoryId"],
           isInStock: data["isInStock"],
           thumbnailURL: data["thumbnailURL"],
           imageURLs: List<String>.from(data["imageURLs"]),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );

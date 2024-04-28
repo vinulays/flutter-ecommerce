@@ -32,6 +32,8 @@ class WishListService {
           title: data['title'],
           description: data['description'],
           price: double.parse(data["price"].toString()),
+          discountPercentage:
+              double.parse(data["discountPercentage"].toString()),
           rating: double.parse(data['rating']
               .toString()), // * converting firebase number format to double format
           categoryId: data["categoryId"],
@@ -41,6 +43,7 @@ class WishListService {
             data["imageURLs"],
           ),
           createdAt: data["createdAt"].toDate(),
+          discountEndDateTime: data["discountEndDateTime"].toDate(),
           sizes: List<String>.from(data["sizes"]),
           colors: List<String>.from(data["colors"]),
         );

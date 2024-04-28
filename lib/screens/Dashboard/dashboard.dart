@@ -1,23 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_ecommerce/models/flash_sale.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/category_details.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
+import 'package:flutter_ecommerce/services/flashsale_service.dart';
 import 'package:flutter_ecommerce/ui/product_card.dart';
 import 'package:flutter_ecommerce/ui/product_search_delegate.dart';
 import 'package:flutter_ecommerce/utils/product_categories.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final FlashSaleService flashSaleService = FlashSaleService();
+  Dashboard({super.key});
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  FlashSale? flashSale;
+
+  Future<void> getCurrentFlashSale() async {
+    final flashSale2 = await widget.flashSaleService.getCurrentFlashSale();
+
+    setState(() {
+      flashSale = flashSale2;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentFlashSale();
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
@@ -250,63 +270,78 @@ class _DashboardState extends State<Dashboard> {
                   height: 35,
                 ),
                 // * Flash sale
-                Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: deviceData.size.width * 0.05),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Flash Sale",
-                        style: GoogleFonts.poppins(
-                            fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Closing in:",
-                            style: GoogleFonts.poppins(),
-                          ),
-                          const SizedBox(
-                            width: 7,
-                          ),
-                          // const SlideCountdownSeparated(
-                          //   padding: EdgeInsets.all(4),
-                          //   separator: "",
-                          //   duration: Duration(hours: 12),
-                          // ),
-                        ],
-                      )
-                    ],
+                if (flashSale != null)
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                        horizontal: deviceData.size.width * 0.05),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Flash Sale",
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.w700),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Closing in:",
+                              style: GoogleFonts.poppins(),
+                            ),
+                            const SizedBox(
+                              width: 7,
+                            ),
+                            // SlideCountdownSeparated(
+                            //   padding: const EdgeInsets.all(4),
+                            //   separator: "",
+                            //   duration: Duration(
+                            //       seconds: Jiffy.parse(
+                            //               flashSale!.endDateTime.toString())
+                            //           .diff(
+                            //               Jiffy.parse(
+                            //                   DateTime.now().toString()),
+                            //               unit: Unit.second)
+                            //           .toInt()),
+                            // ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
-                // * Flash sale items
 
-                BlocBuilder<ProductsBloc, ProductsState>(
-                  builder: (context, state) {
-                    if (state is ProductsLoaded) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: deviceData.size.width * 0.05),
-                        child: Wrap(
-                          alignment: WrapAlignment.spaceBetween,
-                          runSpacing: 10,
-                          children:
-                              List.generate(state.products.length, (index) {
-                            return ProductCard(product: state.products[index]);
-                          }),
-                        ),
-                      );
-                    } else if (state is ProductsLoading) {
-                      Container();
-                    }
+                if (flashSale != null)
+                  BlocBuilder<ProductsBloc, ProductsState>(
+                    builder: (context, state) {
+                      if (state is ProductsLoaded) {
+                        final filteredProducts = state.products
+                            .where((product) =>
+                                flashSale!.productIds.contains(product.id))
+                            .toList();
 
-                    return Container();
-                  },
-                ),
+                        return Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: deviceData.size.width * 0.05),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runSpacing: 10,
+                            children:
+                                List.generate(filteredProducts.length, (index) {
+                              return ProductCard(
+                                  discount: flashSale?.discountPercentage,
+                                  product: filteredProducts[index]);
+                            }),
+                          ),
+                        );
+                      } else if (state is ProductsLoading) {
+                        Container();
+                      }
+
+                      return Container();
+                    },
+                  ),
                 const SizedBox(
                   height: 20,
                 )

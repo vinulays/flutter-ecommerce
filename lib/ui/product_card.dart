@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
@@ -11,7 +12,8 @@ import 'package:like_button/like_button.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  const ProductCard({super.key, required this.product});
+  final double? discount;
+  const ProductCard({super.key, required this.product, this.discount});
 
   Future<bool?> _toggleWishlistProduct(
       BuildContext context, Product product, bool isLiked) async {
@@ -41,10 +43,8 @@ class ProductCard extends StatelessWidget {
                 .read<ProductDetailsBloc>()
                 .add(FetchProductDetailsEvent(product.id!));
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ProductDetails()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProductDetails()));
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,14 +147,38 @@ class ProductCard extends StatelessWidget {
                 height: 2,
               ),
               SizedBox(
-                width: 160,
-                child: Text(
-                  "\$${product.price.toStringAsFixed(2)}",
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                      color: Colors.black.withOpacity(0.5),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
+                width: 170,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      child: Text(
+                        "\$${product.price.toStringAsFixed(2)}",
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                            decoration: discount != null
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
+                            color: Colors.black.withOpacity(0.5),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    if (discount != null)
+                      const SizedBox(
+                        width: 7,
+                      ),
+                    if (discount != null)
+                      SizedBox(
+                        child: Text(
+                          "\$${(product.price - ((product.price * discount!))).toStringAsFixed(2)}",
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                              color: Colors.black.withOpacity(0.5),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],

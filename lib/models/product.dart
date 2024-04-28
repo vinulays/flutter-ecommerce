@@ -11,6 +11,8 @@ class Product {
   double rating;
   List<String> sizes;
   List<String> colors;
+  double discountPercentage; // * 0.1, 0.2, 0.3
+  DateTime discountEndDateTime;
 
   Product(
       {this.id,
@@ -24,5 +26,7 @@ class Product {
       required this.createdAt,
       required this.rating,
       required this.sizes,
-      required this.colors});
+      required this.colors,
+      required this.discountPercentage,
+      required this.discountEndDateTime});
 }

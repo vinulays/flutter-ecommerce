@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
+import 'package:flutter_ecommerce/models/flash_sale.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
+import 'package:flutter_ecommerce/services/flashsale_service.dart';
 import 'package:flutter_ecommerce/utils/helper_functions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +21,9 @@ import 'package:readmore/readmore.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetails extends StatefulWidget {
-  const ProductDetails({super.key});
+  final FlashSaleService flashSaleService = FlashSaleService();
+
+  ProductDetails({super.key});
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -29,6 +33,16 @@ class _ProductDetailsState extends State<ProductDetails> {
   final controller = PageController(keepPage: true);
   int? value;
   int? colorValue;
+
+  FlashSale? flashSale;
+
+  Future<void> getCurrentFlashSale() async {
+    final flashSale2 = await widget.flashSaleService.getCurrentFlashSale();
+
+    setState(() {
+      flashSale = flashSale2;
+    });
+  }
 
   Future<bool?> _toggleWishlistProduct(
       BuildContext context, Product product, bool isLiked) async {
@@ -43,6 +57,12 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getCurrentFlashSale();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
     Product? product;
@@ -52,6 +72,20 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     bool isButtonDisable() {
       return value == null || colorValue == null;
+    }
+
+    bool isProductInFlashSale() {
+      return flashSale != null && flashSale!.productIds.contains(product!.id);
+    }
+
+    void addToFlashSale() async {
+      await widget.flashSaleService
+          .addProductIdToFlashSale(flashSale!.id!, product!.id!);
+    }
+
+    void removeFromFlashSale() async {
+      await widget.flashSaleService
+          .removeProductFromFlashSale(flashSale!.id!, product!.id!);
     }
 
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
@@ -357,19 +391,41 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "\$150.00",
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          decoration:
-                                              TextDecoration.lineThrough),
-                                    ),
-                                    Text(
-                                      "\$${product!.price.toStringAsFixed(2)}",
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w700),
-                                    ),
+                                    if (flashSale != null &&
+                                        flashSale!.productIds
+                                            .contains(product!.id!))
+                                      Text(
+                                        "\$${product!.price.toStringAsFixed(2)}",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            decoration:
+                                                TextDecoration.lineThrough),
+                                      ),
+                                    if (flashSale != null &&
+                                        flashSale!.productIds
+                                            .contains(product!.id!))
+                                      Text(
+                                        "\$${(product!.price - (product!.price * flashSale!.discountPercentage)).toStringAsFixed(2)}",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    if (flashSale == null)
+                                      Text(
+                                        "\$${product!.price.toStringAsFixed(2)}",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    if (flashSale != null &&
+                                        !flashSale!.productIds
+                                            .contains(product!.id!))
+                                      Text(
+                                        "\$${product!.price.toStringAsFixed(2)}",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w700),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -397,7 +453,20 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                     CartItem(
                                                         id: product!.id!,
                                                         name: product!.title,
-                                                        price: product!.price,
+                                                        // * if the product is in flash sale, pass the discounted price to the cart. if not, pass the normal price
+                                                        price: (flashSale !=
+                                                                    null &&
+                                                                flashSale!
+                                                                    .productIds
+                                                                    .contains(
+                                                                        product!
+                                                                            .id))
+                                                            ? (product!.price -
+                                                                (product!
+                                                                        .price *
+                                                                    flashSale!
+                                                                        .discountPercentage))
+                                                            : product!.price,
                                                         imageUrl: product!
                                                             .thumbnailURL,
                                                         quantity: 1,
@@ -658,6 +727,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             style: GoogleFonts.poppins(),
                                           ),
                                         ),
+                                        if (flashSale != null)
+                                          PopupMenuItem<String>(
+                                            value: 'flash',
+                                            child: Text(
+                                              isProductInFlashSale()
+                                                  ? 'Remove from flash sale'
+                                                  : "Add to flash sale",
+                                              style: GoogleFonts.poppins(),
+                                            ),
+                                          ),
                                         PopupMenuItem<String>(
                                           value: 'delete',
                                           child: Text(
@@ -680,6 +759,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 ),
                                               ),
                                             );
+                                            break;
+                                          case 'flash':
+                                            (isProductInFlashSale())
+                                                ? removeFromFlashSale()
+                                                : addToFlashSale();
                                             break;
                                           case 'delete':
                                             showDialog(
