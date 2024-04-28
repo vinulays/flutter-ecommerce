@@ -160,7 +160,7 @@ class AuthService {
     }
   }
 
-  Future<UserLocal?> changeUsername(String username) async {
+  Future<UserLocal?> changeUsername(String displayName) async {
     try {
       User? user = await getCurrentUser();
 
@@ -168,7 +168,7 @@ class AuthService {
         String userId = user.uid;
 
         await _firestore.collection('users').doc(userId).update({
-          'username': username,
+          'displayName': displayName,
         });
 
         DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
@@ -215,6 +215,26 @@ class AuthService {
       return null;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<void> changePassword(
+      String currentPassword, String newPassword) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user!.email!,
+        password: currentPassword,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      await user.updatePassword(newPassword);
+
+      _firebaseAuth.signOut();
+    } catch (e) {
+      throw Exception('Failed to update password: $e');
     }
   }
 }
