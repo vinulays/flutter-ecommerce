@@ -21,6 +21,14 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormBuilderState>();
   String? errorMsg;
 
+  bool? _passwordVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
@@ -127,7 +135,7 @@ class _LoginState extends State<Login> {
                         style: GoogleFonts.poppins(),
                         name: "password",
                         cursorColor: Colors.black,
-                        obscureText: true,
+                        obscureText: !_passwordVisible!,
                         enableSuggestions: false,
                         autocorrect: false,
                         decoration: InputDecoration(
@@ -137,6 +145,23 @@ class _LoginState extends State<Login> {
                             contentPadding: EdgeInsets.zero,
                             prefix: Container(
                               width: 20,
+                            ),
+                            suffixIcon: Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              child: IconButton(
+                                highlightColor: Colors.transparent,
+                                onPressed: () {
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible!;
+                                  });
+                                },
+                                icon: Icon(
+                                  _passwordVisible!
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.black.withOpacity(0.6),
+                                ),
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(

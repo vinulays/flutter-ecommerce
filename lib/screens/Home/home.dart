@@ -19,14 +19,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     // * Add appropriate screens as commented below
     Dashboard(),
-    Wishlist(),
-    ShoppingCart(
+    const Wishlist(),
+    const ShoppingCart(
       fromWhere: "home",
     ),
-    Profile(),
+    const Profile(),
 
     // * Notifications
   ];

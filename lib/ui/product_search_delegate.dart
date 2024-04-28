@@ -95,7 +95,7 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ProductDetails(),
+                                  builder: (context) => ProductDetails(),
                                 ),
                               );
                             },
@@ -158,7 +158,7 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ProductDetails(),
+                              builder: (context) => ProductDetails(),
                             ),
                           );
                         },

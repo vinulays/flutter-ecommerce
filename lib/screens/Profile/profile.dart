@@ -432,22 +432,7 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Deactivate Account",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
-                    ),
+
                     const SizedBox(
                       height: 15,
                     ),
