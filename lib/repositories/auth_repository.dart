@@ -39,4 +39,12 @@ class AuthRepository {
   Future<void> logout() async {
     await _authService.logout();
   }
+
+  Future<UserLocal?> changeUsername(String username) async {
+    return _authService.changeUsername(username);
+  }
+
+  Future<UserLocal?> changePhoneNumber(String phoneNumber) async {
+    return _authService.chanePhoneNumber(phoneNumber);
+  }
 }

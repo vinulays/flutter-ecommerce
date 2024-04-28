@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/screens/AdminForm/admin_form.dart';
+import 'package:flutter_ecommerce/screens/ChangeSettingsForm/change_settings_form.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
@@ -308,7 +311,7 @@ class _ProfileState extends State<Profile> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => AdminForm(),
+                              builder: (context) => const AdminForm(),
                             ),
                           );
                         },
@@ -355,34 +358,62 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Username",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ChangeSettingsForm(
+                              userId: userLocal!.id!,
+                              settingValue: userLocal!.username,
+                              settingName: "Username",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Username",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.6)),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 30, color: Colors.black.withOpacity(0.6))
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Phone number",
-                          style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              color: Colors.black.withOpacity(0.6)),
-                        ),
-                        Icon(Icons.chevron_right_rounded,
-                            size: 30, color: Colors.black.withOpacity(0.6))
-                      ],
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ChangeSettingsForm(
+                              userId: userLocal!.id!,
+                              settingValue: userLocal!.contactNo!,
+                              settingName: "Phone number",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Phone number",
+                            style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                color: Colors.black.withOpacity(0.6)),
+                          ),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 30, color: Colors.black.withOpacity(0.6))
+                        ],
+                      ),
                     ),
                     if (FirebaseAuth
                             .instance.currentUser!.providerData[0].providerId ==

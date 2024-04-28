@@ -159,4 +159,62 @@ class AuthService {
       throw Exception("Failed to logout: $e");
     }
   }
+
+  Future<UserLocal?> changeUsername(String username) async {
+    try {
+      User? user = await getCurrentUser();
+
+      if (user != null) {
+        String userId = user.uid;
+
+        await _firestore.collection('users').doc(userId).update({
+          'username': username,
+        });
+
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+
+        // Convert the document data into a UserLocal object
+        UserLocal updatedUser =
+            UserLocal.fromFirestore(userSnapshot, user.email);
+
+        return updatedUser;
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<UserLocal?> chanePhoneNumber(String phoneNumber) async {
+    try {
+      User? user = await getCurrentUser();
+
+      if (user != null) {
+        String userId = user.uid;
+
+        await _firestore.collection('users').doc(userId).update({
+          'contactNo': phoneNumber,
+        });
+
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
+
+        // Convert the document data into a UserLocal object
+        UserLocal updatedUser =
+            UserLocal.fromFirestore(userSnapshot, user.email);
+
+        return updatedUser;
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
 }

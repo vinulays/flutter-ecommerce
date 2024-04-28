@@ -83,5 +83,30 @@ class AuthenticationBloc
         emit(LogoutFailure("Failed to logout: $e"));
       }
     });
+
+    on<ChangeUsernameEvent>((event, emit) async {
+      try {
+        UserLocal? user = await _authRepository.changeUsername(event.username);
+
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        }
+      } catch (e) {
+        throw Exception("Failed to update username: $e");
+      }
+    });
+
+    on<ChangePhoneNumberEvent>((event, emit) async {
+      try {
+        UserLocal? user =
+            await _authRepository.changePhoneNumber(event.phoneNumber);
+
+        if (user != null) {
+          emit(AuthenticationAuthenticated(user));
+        }
+      } catch (e) {
+        throw Exception("Failed to update phone number: $e");
+      }
+    });
   }
 }

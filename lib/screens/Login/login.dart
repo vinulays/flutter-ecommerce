@@ -31,8 +31,8 @@ class _LoginState extends State<Login> {
             context.read<WishlistBloc>().add(FetchWishListEvent());
 
             // * navigatin to home page after a successfull login
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => const Home()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const Home()));
           } else if (state is AuthenticationUnauthenticated) {
             // * set error message under the email field
             setState(() {
