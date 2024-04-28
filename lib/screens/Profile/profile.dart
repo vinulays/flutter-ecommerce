@@ -6,6 +6,8 @@ import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/screens/AdminForm/admin_form.dart';
 import 'package:flutter_ecommerce/screens/ChangePasswordForm/change_password_form.dart';
 import 'package:flutter_ecommerce/screens/ChangeSettingsForm/change_settings_form.dart';
+import 'package:flutter_ecommerce/screens/FlashSales/bloc/flashsale_bloc.dart';
+import 'package:flutter_ecommerce/screens/FlashSales/flashsale_details.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
@@ -249,6 +251,38 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Text(
                               "Add a product",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                            Icon(Icons.chevron_right_rounded,
+                                size: 30, color: Colors.black.withOpacity(0.6))
+                          ],
+                        ),
+                      ),
+                    if (userLocal!.role == "admin")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (userLocal!.role == "admin")
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          context
+                              .read<FlashsaleBloc>()
+                              .add(FetchFlashSaleEvent());
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FlashSaleDetails(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Manage flash sales",
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: Colors.black.withOpacity(0.6)),
