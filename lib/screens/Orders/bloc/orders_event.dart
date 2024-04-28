@@ -7,6 +7,8 @@ sealed class OrdersEvent extends Equatable {
 
 class FetchOrdersEvent extends OrdersEvent {}
 
+class FetchAllOrdersEvent extends OrdersEvent {}
+
 class AddOrderEvent extends OrdersEvent {
   final OrderLocal order;
 
