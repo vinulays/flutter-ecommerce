@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/user.dart';
+import 'package:flutter_ecommerce/screens/AdminForm/admin_form.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
@@ -288,6 +289,34 @@ class _ProfileState extends State<Profile> {
                           children: [
                             Text(
                               "Add a promo code",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                            Icon(Icons.chevron_right_rounded,
+                                size: 30, color: Colors.black.withOpacity(0.6))
+                          ],
+                        ),
+                      ),
+                    if (userLocal!.role == "admin")
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    if (userLocal!.role == "admin")
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AdminForm(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Add an admin",
                               style: GoogleFonts.poppins(
                                   fontSize: 16,
                                   color: Colors.black.withOpacity(0.6)),

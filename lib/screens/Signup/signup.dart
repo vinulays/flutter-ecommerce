@@ -485,13 +485,14 @@ class _SignupState extends State<Signup> {
                             _formKey.currentState!.reset();
 
                             context.read<AuthenticationBloc>().add(
-                                SignUpRequested(
-                                    displayName: displayName,
-                                    username: username,
-                                    email: email,
-                                    mobileNumber: mobileNumber,
-                                    password: password,
-                                    role: role));
+                                  SignUpRequested(
+                                      displayName: displayName,
+                                      username: username,
+                                      email: email,
+                                      mobileNumber: mobileNumber,
+                                      password: password,
+                                      role: role),
+                                );
                           }
                         },
                         style: ButtonStyle(
