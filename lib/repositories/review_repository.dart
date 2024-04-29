@@ -10,4 +10,8 @@ class ReviewRepository {
   Future<List<Review>> getReviewsByProductId(String productId) async {
     return _reviewService.getReviewsByProductId(productId);
   }
+
+  Future<void> addReview(Review review) async {
+    await _reviewService.addReview(review);
+  }
 }

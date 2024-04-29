@@ -185,7 +185,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             Clip.antiAliasWithSaveLayer,
                                         context: context,
                                         builder: (BuildContext context) {
-                                          return Reviews();
+                                          return Reviews(
+                                            productId: product!.id!,
+                                          );
                                         });
                                   },
                                   child: Container(

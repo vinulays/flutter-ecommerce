@@ -32,4 +32,34 @@ class ReviewService {
       throw Exception("Failed to fetch reviews: $e");
     }
   }
+
+  Future<void> addReview(Review review) async {
+    try {
+      await _firestore.collection('reviews').add({
+        'customerId': review.customerId,
+        'productId': review.productId,
+        'description': review.description,
+        'rating': review.rating,
+        'createdAt': DateTime.now(),
+      });
+
+      List<Review> reviews = await getReviewsByProductId(review.productId);
+
+      double overallRating = 0;
+      int noOfRatings = reviews.length;
+
+      for (var review in reviews) {
+        overallRating += review.rating;
+      }
+
+      overallRating /= noOfRatings;
+
+      await _firestore.collection('products').doc(review.productId).update({
+        'rating': overallRating,
+        'noOfReviews': noOfRatings,
+      });
+    } catch (e) {
+      throw Exception("Failed to add review: $e");
+    }
+  }
 }

@@ -23,3 +23,13 @@ class ReviewsLoadingError extends ReviewsState {
 
   ReviewsLoadingError(this.errorMessage);
 }
+
+class ReviewAdding extends ReviewsState {}
+
+class ReviewsAdded extends ReviewsState {}
+
+class ReviewAddingError extends ReviewsState {
+  final String errorMessage;
+
+  ReviewAddingError(this.errorMessage);
+}

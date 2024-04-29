@@ -21,5 +21,15 @@ class ReviewsBloc extends Bloc<ReviewsEvent, ReviewsState> {
         emit(ReviewsLoadingError("Failed to fetch reviews: $e"));
       }
     });
+
+    on<AddReviewEvent>((event, emit) async {
+      try {
+        await _reviewRepository.addReview(event.review);
+
+        add(FetchReviewsEvent(event.review.productId));
+      } catch (e) {
+        emit(ReviewAddingError("Failed to add review: $e"));
+      }
+    });
   }
 }

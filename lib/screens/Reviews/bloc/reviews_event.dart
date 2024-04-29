@@ -10,3 +10,9 @@ class FetchReviewsEvent extends ReviewsEvent {
 
   FetchReviewsEvent(this.productId);
 }
+
+class AddReviewEvent extends ReviewsEvent {
+  final Review review;
+
+  AddReviewEvent(this.review);
+}
