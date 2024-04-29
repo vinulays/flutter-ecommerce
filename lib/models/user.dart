@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserLocal {
   String? id;
-  String email;
+  String? email;
   String? avatarURL;
   String displayName;
   String username;
@@ -13,7 +13,7 @@ class UserLocal {
 
   UserLocal(
       {this.id,
-      required this.email,
+      this.email,
       this.avatarURL,
       required this.displayName,
       required this.username,

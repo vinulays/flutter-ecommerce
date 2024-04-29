@@ -9,10 +9,9 @@ class Product {
   String categoryId;
   DateTime createdAt;
   double rating;
+  int noOfReviews;
   List<String> sizes;
   List<String> colors;
-  double discountPercentage; // * 0.1, 0.2, 0.3
-  DateTime discountEndDateTime;
 
   Product(
       {this.id,
@@ -27,6 +26,5 @@ class Product {
       required this.rating,
       required this.sizes,
       required this.colors,
-      required this.discountPercentage,
-      required this.discountEndDateTime});
+      required this.noOfReviews});
 }
