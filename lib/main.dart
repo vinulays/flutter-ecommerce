@@ -94,6 +94,7 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthenticationBloc(
             authRepository: AuthRepository(
               authService: AuthService(
+                  storage: FirebaseStorage.instance,
                   firebaseAuth: FirebaseAuth.instance,
                   firestore: FirebaseFirestore.instance),
             ),
@@ -107,6 +108,7 @@ class MyApp extends StatelessWidget {
                     WishListService(fireStore: FirebaseFirestore.instance)),
             authRepository: AuthRepository(
               authService: AuthService(
+                  storage: FirebaseStorage.instance,
                   firebaseAuth: FirebaseAuth.instance,
                   firestore: FirebaseFirestore.instance),
             ),

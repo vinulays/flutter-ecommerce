@@ -70,3 +70,10 @@ class ChangePasswordEvent extends AuthenticationEvent {
 
   ChangePasswordEvent(this.currentPassword, this.newPassword);
 }
+
+class UpdateAvatarEvent extends AuthenticationEvent {
+  final File image;
+  final String userId;
+
+  UpdateAvatarEvent(this.image, this.userId);
+}

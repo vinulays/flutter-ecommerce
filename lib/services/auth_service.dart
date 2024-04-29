@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,13 +10,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
+  final FirebaseStorage _storage;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   AuthService(
       {required FirebaseAuth firebaseAuth,
-      required FirebaseFirestore firestore})
+      required FirebaseFirestore firestore,
+      required FirebaseStorage storage})
       : _firebaseAuth = firebaseAuth,
-        _firestore = firestore;
+        _firestore = firestore,
+        _storage = storage;
 
   Future<User?> getCurrentUser() async {
     final user = _firebaseAuth.currentUser;
@@ -235,6 +241,51 @@ class AuthService {
       _firebaseAuth.signOut();
     } catch (e) {
       throw Exception('Failed to update password: $e');
+    }
+  }
+
+  Future<String> uploadImageToStorage(File imageFile, String userId) async {
+    try {
+      Reference storageRef = _storage.ref().child('user_avatars/$userId.jpg');
+      await storageRef.putFile(imageFile);
+
+      String downloadURL = await storageRef.getDownloadURL();
+
+      return downloadURL;
+    } catch (e) {
+      throw Exception("Failed to upload image: $e");
+    }
+  }
+
+  Future<UserLocal> updateUserAvatarURL(String userId, String avatarURL) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'avatarURL': avatarURL,
+      });
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      UserLocal updatedUser = UserLocal.fromFirestore(
+          userSnapshot, _firebaseAuth.currentUser!.email);
+
+      return updatedUser;
+    } catch (e) {
+      throw Exception("Failed to update user avatarURL: $e");
+    }
+  }
+
+  Future<UserLocal> uploadImageAndUpdateAvatarURL(
+      File imageFile, String userId) async {
+    try {
+      String avatarURL = await uploadImageToStorage(imageFile, userId);
+
+      final updatedUser = await updateUserAvatarURL(userId, avatarURL);
+      return updatedUser;
+    } catch (e) {
+      throw Exception("Failed to upload image and update avatarURL: $e");
     }
   }
 }

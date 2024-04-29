@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/services/auth_service.dart';
@@ -51,5 +53,9 @@ class AuthRepository {
   Future<void> changePassword(
       String currentPassword, String newPassword) async {
     await _authService.changePassword(currentPassword, newPassword);
+  }
+
+  Future<UserLocal> updateAvatar(File imageFile, String userId) async {
+    return _authService.uploadImageAndUpdateAvatarURL(imageFile, userId);
   }
 }

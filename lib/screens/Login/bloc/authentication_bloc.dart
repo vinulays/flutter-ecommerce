@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,6 +117,17 @@ class AuthenticationBloc
             event.currentPassword, event.newPassword);
       } catch (e) {
         throw Exception("Failed to change password: $e");
+      }
+    });
+
+    on<UpdateAvatarEvent>((event, emit) async {
+      try {
+        UserLocal user =
+            await _authRepository.updateAvatar(event.image, event.userId);
+
+        emit(AuthenticationAuthenticated(user));
+      } catch (e) {
+        throw Exception("Failed to update profile image");
       }
     });
   }
