@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/PromoCodeForm/promocode_form.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,6 +28,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final ImagePicker _picker = ImagePicker();
+  File? _avatarImage;
+
   String getAvatarLetters(String name) {
     List<String> words = name.split(" ");
     String firstLetters = "";
@@ -36,6 +42,16 @@ class _ProfileState extends State<Profile> {
     }
 
     return firstLetters;
+  }
+
+  Future<void> pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _avatarImage = File(pickedFile.path);
+      });
+    }
   }
 
   @override
@@ -74,42 +90,114 @@ class _ProfileState extends State<Profile> {
                   children: [
                     if (userLocal?.avatarURL != null &&
                         userLocal?.avatarURL != "")
-                      // CircleAvatar(
-                      //   radius: 50,
-                      //   backgroundImage: NetworkImage(userLocal!.avatarURL!),
-                      // ),
-                      CachedNetworkImage(
-                        imageUrl: userLocal!.avatarURL!,
-                        imageBuilder: (context, imageProvider) => Container(
-                          height: 110,
-                          width: 110,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
-                            shape: BoxShape.circle,
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: userLocal!.avatarURL!,
+                            imageBuilder: (context, imageProvider) => Container(
+                              height: 110,
+                              width: 110,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            placeholder: (context, url) => const SizedBox(
+                              height: 110,
+                              width: 110,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [CircularProgressIndicator()],
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
-                        ),
-                        placeholder: (context, url) => const SizedBox(
-                          height: 110,
-                          width: 110,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [CircularProgressIndicator()],
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                          Positioned(
+                            bottom: -3,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await pickImage();
+
+                                if (context.mounted) {
+                                  if (_avatarImage != null) {
+                                    context.read<AuthenticationBloc>().add(
+                                        UpdateAvatarEvent(
+                                            _avatarImage!, userLocal!.id!));
+
+                                    setState(() {
+                                      _avatarImage = null;
+                                    });
+                                  }
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black.withOpacity(0.1)),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     if (userLocal?.avatarURL == null ||
                         userLocal?.avatarURL == "")
-                      CircleAvatar(
-                        backgroundColor: Colors.black.withOpacity(0.1),
-                        radius: 50,
-                        child: Text(
-                          getAvatarLetters(userLocal!.displayName),
-                          style: GoogleFonts.poppins(fontSize: 35),
-                        ),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.black.withOpacity(0.1),
+                            radius: 50,
+                            child: Text(
+                              getAvatarLetters(userLocal!.displayName),
+                              style: GoogleFonts.poppins(fontSize: 35),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: -3,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () async {
+                                await pickImage();
+
+                                if (context.mounted) {
+                                  if (_avatarImage != null) {
+                                    context.read<AuthenticationBloc>().add(
+                                        UpdateAvatarEvent(
+                                            _avatarImage!, userLocal!.id!));
+
+                                    setState(() {
+                                      _avatarImage = null;
+                                    });
+                                  }
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black.withOpacity(0.1)),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     const SizedBox(
                       width: 15,
