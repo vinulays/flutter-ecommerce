@@ -109,75 +109,90 @@ class _DashboardState extends State<Dashboard> {
           Expanded(
             child: ListView(
               children: [
-                Stack(
-                  children: [
-                    ShaderMask(
-                      blendMode: BlendMode.srcATop,
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: const Alignment(0.01, 0),
-                          end: const Alignment(0.015, 1.1),
-                          colors: [Colors.black.withOpacity(0), Colors.black],
-                        ).createShader(bounds);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: deviceData.size.width * 0.05),
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: const DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/images/promo-banner.jpg"),
+                GestureDetector(
+                  onTap: () {
+                    context.read<CategoryDetailsBloc>().add(
+                        FetchCategoryDetailsEvent(productCategories[0].id));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CategoryDetails(
+                                  categoryId: productCategories[0].id,
+                                  categoryName: productCategories[0].name,
+                                  bannerURL: productCategories[0].bannerURL,
+                                )));
+                  },
+                  child: Stack(
+                    children: [
+                      ShaderMask(
+                        blendMode: BlendMode.srcATop,
+                        shaderCallback: (Rect bounds) {
+                          return LinearGradient(
+                            begin: const Alignment(0.01, 0),
+                            end: const Alignment(0.015, 1.1),
+                            colors: [Colors.black.withOpacity(0), Colors.black],
+                          ).createShader(bounds);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: deviceData.size.width * 0.05),
+                          width: double.infinity,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: const DecorationImage(
+                              fit: BoxFit.cover,
+                              image:
+                                  AssetImage("assets/images/promo-banner.jpg"),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 25,
-                      left: 20,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: deviceData.size.width * 0.05),
-                            child: Text(
-                              "Air Jordan 50% Off",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500),
+                      Positioned(
+                        bottom: 25,
+                        left: 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: deviceData.size.width * 0.05),
+                              child: Text(
+                                "Air Jordan 50% Off",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: deviceData.size.width * 0.05),
-                            child: Text(
-                              "Seasonal Offer",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w500),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: deviceData.size.width * 0.05),
+                              child: Text(
+                                "Seasonal Offer",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 25,
-                      right: 20,
-                      child: Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: deviceData.size.width * 0.05),
-                          child: const Icon(
-                            size: 40,
-                            Icons.arrow_right_sharp,
-                            color: Colors.white,
-                          )),
-                    )
-                  ],
+                      Positioned(
+                        bottom: 25,
+                        right: 20,
+                        child: Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: deviceData.size.width * 0.05),
+                            child: const Icon(
+                              size: 40,
+                              Icons.arrow_right_sharp,
+                              color: Colors.white,
+                            )),
+                      )
+                    ],
+                  ),
                 ),
 
                 const SizedBox(
@@ -194,14 +209,6 @@ class _DashboardState extends State<Dashboard> {
                         "Browse Categories",
                         style: GoogleFonts.poppins(
                             fontSize: 18, fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        "See all",
-                        style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
                       ),
                     ],
                   ),
@@ -374,8 +381,10 @@ class _DashboardState extends State<Dashboard> {
                       }).toList();
 
                       return Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: deviceData.size.width * 0.05),
+                        margin: EdgeInsets.only(
+                            left: deviceData.size.width * 0.05,
+                            right: deviceData.size.width * 0.05,
+                            bottom: 20),
                         child: Wrap(
                           alignment: WrapAlignment.spaceBetween,
                           runSpacing: 10,

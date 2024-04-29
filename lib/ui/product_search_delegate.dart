@@ -20,6 +20,8 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
   ThemeData appBarTheme(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return theme.copyWith(
+      appBarTheme:
+          const AppBarTheme(elevation: 0, toolbarHeight: kToolbarHeight + 40),
       textTheme: theme.textTheme.copyWith(
         titleLarge: GoogleFonts.poppins(
             color: Colors.black, fontSize: 18.0), // Customize text style
@@ -65,7 +67,7 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
           } else {
             List<Product> products = snapshot.data ?? [];
             return Container(
-              margin: const EdgeInsets.only(top: 25),
+              margin: const EdgeInsets.only(top: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -128,7 +130,7 @@ class ProductSearchDelegate extends SearchDelegate<Product> {
           final List<Product> products = snapshot.data ?? [];
 
           return Container(
-            margin: const EdgeInsets.only(top: 25),
+            margin: const EdgeInsets.only(top: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

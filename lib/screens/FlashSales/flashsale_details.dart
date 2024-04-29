@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/flash_sale.dart';
 import 'package:flutter_ecommerce/screens/FlashSaleForm/flashsale_form.dart';
