@@ -502,7 +502,7 @@ class _ProfileState extends State<Profile> {
                           MaterialPageRoute(
                             builder: (context) => ChangeSettingsForm(
                               userId: userLocal!.id!,
-                              settingValue: userLocal!.contactNo!,
+                              settingValue: userLocal!.contactNo ?? "",
                               settingName: "Phone number",
                             ),
                           ),
