@@ -118,6 +118,9 @@ flutter:
     - assets/icons/applepay-logo.png
     - assets/icons/mastercard-logo.png
     - assets/icons/payment-success.png
+    - assets/images/onboard-1.svg
+    - assets/images/onboard-2.svg
+    - assets/images/onboard-3.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

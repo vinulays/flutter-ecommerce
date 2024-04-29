@@ -16,7 +16,6 @@ import 'package:flutter_ecommerce/repositories/wishlist_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/FlashSales/bloc/flashsale_bloc.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
-import 'package:flutter_ecommerce/screens/Login/login.dart';
 import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
@@ -159,7 +158,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
             useMaterial3: true,
             splashColor: Colors.transparent),
-        home: const Login(),
+        home: const Welcome(),
       ),
     );
   }
