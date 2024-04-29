@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/flash_sale.dart';
+import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/category_details.dart';
 import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
@@ -266,9 +267,10 @@ class _DashboardState extends State<Dashboard> {
                           ),
                       itemCount: productCategories.length),
                 ),
-                const SizedBox(
-                  height: 35,
-                ),
+                if (flashSale != null)
+                  const SizedBox(
+                    height: 35,
+                  ),
                 // * Flash sale
                 if (flashSale != null)
                   Container(
@@ -291,18 +293,18 @@ class _DashboardState extends State<Dashboard> {
                             const SizedBox(
                               width: 7,
                             ),
-                            SlideCountdownSeparated(
-                              padding: const EdgeInsets.all(4),
-                              separator: "",
-                              duration: Duration(
-                                  seconds: Jiffy.parse(
-                                          flashSale!.endDateTime.toString())
-                                      .diff(
-                                          Jiffy.parse(
-                                              DateTime.now().toString()),
-                                          unit: Unit.second)
-                                      .toInt()),
-                            ),
+                            // SlideCountdownSeparated(
+                            //   padding: const EdgeInsets.all(4),
+                            //   separator: "",
+                            //   duration: Duration(
+                            //       seconds: Jiffy.parse(
+                            //               flashSale!.endDateTime.toString())
+                            //           .diff(
+                            //               Jiffy.parse(
+                            //                   DateTime.now().toString()),
+                            //               unit: Unit.second)
+                            //           .toInt()),
+                            // ),
                           ],
                         )
                       ],
@@ -344,7 +346,58 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 const SizedBox(
                   height: 20,
-                )
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: deviceData.size.width * 0.05),
+                  child: Text(
+                    "Latest Products",
+                    style: GoogleFonts.poppins(
+                        fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                BlocBuilder<ProductsBloc, ProductsState>(
+                  builder: (context, state) {
+                    if (state is ProductsLoaded) {
+                      // * Displaying items created 10 days ago and later
+                      final currentTime = Jiffy.now();
+                      final List<Product> validProducts =
+                          state.products.where((product) {
+                        final productTime =
+                            Jiffy.parse(product.createdAt.toString());
+                        final daysDifference =
+                            currentTime.diff(productTime, unit: Unit.day);
+                        return daysDifference <= 10;
+                      }).toList();
+
+                      return Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: deviceData.size.width * 0.05),
+                        child: Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          runSpacing: 10,
+                          children:
+                              List.generate(validProducts.length, (index) {
+                            return ProductCard(
+                                discount: (flashSale != null &&
+                                        flashSale!.productIds
+                                            .contains(validProducts[index].id))
+                                    ? flashSale!.discountPercentage
+                                    : null,
+                                product: validProducts[index]);
+                          }),
+                        ),
+                      );
+                    } else if (state is ProductsLoading) {
+                      Container();
+                    }
+
+                    return Container();
+                  },
+                ),
               ],
             ),
           )

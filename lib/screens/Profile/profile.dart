@@ -129,7 +129,7 @@ class _ProfileState extends State<Profile> {
                           width: 220,
                           child: Text(
                             overflow: TextOverflow.ellipsis,
-                            userLocal!.email,
+                            userLocal!.email!,
                             style: GoogleFonts.poppins(
                                 fontSize: 15,
                                 color: Colors.black.withOpacity(0.5)),

@@ -10,6 +10,7 @@ import 'package:flutter_ecommerce/repositories/cart_repository.dart';
 import 'package:flutter_ecommerce/repositories/flashsale_repository.dart';
 import 'package:flutter_ecommerce/repositories/order_repository.dart';
 import 'package:flutter_ecommerce/repositories/product_repository.dart';
+import 'package:flutter_ecommerce/repositories/review_repository.dart';
 import 'package:flutter_ecommerce/repositories/user_repository.dart';
 import 'package:flutter_ecommerce/repositories/wishlist_repository.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
@@ -20,13 +21,16 @@ import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
 import 'package:flutter_ecommerce/screens/Profile/bloc/user_bloc.dart';
+import 'package:flutter_ecommerce/screens/Reviews/bloc/reviews_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
+import 'package:flutter_ecommerce/screens/Welcome/welcome.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
 import 'package:flutter_ecommerce/services/auth_service.dart';
 import 'package:flutter_ecommerce/services/cart_service.dart';
 import 'package:flutter_ecommerce/services/flashsale_service.dart';
 import 'package:flutter_ecommerce/services/order_service.dart';
 import 'package:flutter_ecommerce/services/product_service.dart';
+import 'package:flutter_ecommerce/services/review_service.dart';
 import 'package:flutter_ecommerce/services/user_service.dart';
 import 'package:flutter_ecommerce/services/wishlist_service.dart';
 
@@ -133,6 +137,15 @@ class MyApp extends StatelessWidget {
           create: (context) => FlashsaleBloc(
             flashSaleRepository: FlashSaleRepository(
               flashSaleService: FlashSaleService(),
+            ),
+          ),
+        ),
+        // * reviews bloc provider
+        BlocProvider<ReviewsBloc>(
+          create: (context) => ReviewsBloc(
+            repository: ReviewRepository(
+              reviewService:
+                  ReviewService(firestore: FirebaseFirestore.instance),
             ),
           ),
         )

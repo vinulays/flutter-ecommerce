@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/cart_item.dart';
 import 'package:flutter_ecommerce/models/flash_sale.dart';
@@ -9,6 +10,8 @@ import 'package:flutter_ecommerce/screens/Login/bloc/authentication_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductDetails/bloc/product_details_bloc.dart';
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/Products/bloc/products_bloc.dart';
+import 'package:flutter_ecommerce/screens/Reviews/bloc/reviews_bloc.dart';
+import 'package:flutter_ecommerce/screens/Reviews/reviews.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:flutter_ecommerce/screens/Wishlist/bloc/wishlist_bloc.dart';
@@ -170,50 +173,69 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   height: 20,
                                 ),
                                 // * product rating
-                                Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: deviceSize.width * 0.03),
-                                  child: Row(
-                                    children: [
-                                      RatingBar.builder(
-                                        ignoreGestures: true,
-                                        itemSize: 20,
-                                        glow: false,
-                                        initialRating: product!.rating,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: false,
-                                        itemCount: 5,
-                                        itemPadding: const EdgeInsets.symmetric(
-                                            horizontal: 1.0),
-                                        itemBuilder: (context, _) => const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
+                                GestureDetector(
+                                  onTap: () async {
+                                    context
+                                        .read<ReviewsBloc>()
+                                        .add(FetchReviewsEvent(product!.id!));
+
+                                    showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        clipBehavior:
+                                            Clip.antiAliasWithSaveLayer,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return Reviews();
+                                        });
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: deviceSize.width * 0.03),
+                                    child: Row(
+                                      children: [
+                                        RatingBar.builder(
+                                          ignoreGestures: true,
+                                          itemSize: 20,
+                                          glow: false,
+                                          initialRating: product!.rating,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: false,
+                                          itemCount: 5,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 1.0),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (rating) {},
                                         ),
-                                        onRatingUpdate: (rating) {},
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text.rich(
-                                        TextSpan(
-                                          children: [
-                                            TextSpan(
-                                                text: "${product!.rating} ",
-                                                style: GoogleFonts.poppins(
-                                                    fontWeight:
-                                                        FontWeight.w700)),
-                                            TextSpan(
-                                                text: "(1201 reviews)",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                    fontWeight:
-                                                        FontWeight.w700)),
-                                          ],
+                                        const SizedBox(
+                                          width: 5,
                                         ),
-                                      )
-                                    ],
+                                        Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: "${product!.rating} ",
+                                                  style: GoogleFonts.poppins(
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                              TextSpan(
+                                                  text:
+                                                      "(${product!.noOfReviews.toString()} reviews)",
+                                                  style: GoogleFonts.poppins(
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                      fontWeight:
+                                                          FontWeight.w700)),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
