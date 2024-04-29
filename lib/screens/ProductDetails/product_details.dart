@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -739,6 +741,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   } else {
                                     // * popup menu to update and delete item
                                     return PopupMenuButton<String>(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      surfaceTintColor: Colors.white,
                                       offset: const Offset(0, 10),
                                       position: PopupMenuPosition.under,
                                       itemBuilder: (BuildContext context) =>
