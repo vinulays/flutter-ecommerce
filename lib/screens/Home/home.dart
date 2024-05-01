@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    // * Add appropriate screens as commented below
+    // * Navigation bar screens.
     Dashboard(),
     const Wishlist(),
     const ShoppingCart(

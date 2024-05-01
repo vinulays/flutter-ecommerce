@@ -13,6 +13,7 @@ class AdminForm extends StatefulWidget {
 }
 
 class _AdminFormState extends State<AdminForm> {
+  // * Form key for the admin form
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -271,6 +272,8 @@ class _AdminFormState extends State<AdminForm> {
                       width: double.infinity,
                       child: TextButton(
                         onPressed: () async {
+                          // * Getting values from the form and adding a new admin account.
+                          // * createUserWithEmailAndPassword() is used to add a new user to the firebase project.
                           if (_formKey.currentState!.saveAndValidate()) {
                             final values = _formKey.currentState!.value;
 
@@ -304,6 +307,7 @@ class _AdminFormState extends State<AdminForm> {
                                 "contactNo": mobileNumber
                               });
 
+                              // * Navigating back after the addition is complete.
                               if (context.mounted) {
                                 Navigator.of(context).pop();
                               }

@@ -25,6 +25,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   FlashSale? flashSale;
 
+  // * getting current valid sale. (current sale end time should be later than current time)
   Future<void> getCurrentFlashSale() async {
     final flashSale2 = await widget.flashSaleService.getCurrentFlashSale();
 
@@ -84,6 +85,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     GestureDetector(
                       onTap: () async {
+                        // * showing search page via showSearch method
                         await showSearch(
                             context: context,
                             delegate: ProductSearchDelegate());
@@ -225,9 +227,13 @@ class _DashboardState extends State<Dashboard> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
+                            // * fetch particular category from the category bloc
                             context.read<CategoryDetailsBloc>().add(
                                 FetchCategoryDetailsEvent(
                                     productCategories[index].id));
+
+                            // * navigate to category details page
+                            // * should pass categoryId, category name, & category banner url
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -278,7 +284,7 @@ class _DashboardState extends State<Dashboard> {
                   const SizedBox(
                     height: 35,
                   ),
-                // * Flash sale
+                // * Flash sale (displays only if there is an active flash sale)
                 if (flashSale != null)
                   Container(
                     margin: EdgeInsets.symmetric(
@@ -300,6 +306,8 @@ class _DashboardState extends State<Dashboard> {
                             const SizedBox(
                               width: 7,
                             ),
+                            // * Count down timer
+                            // * Duration = flash sale end time - current time
                             SlideCountdownSeparated(
                               padding: const EdgeInsets.all(4),
                               separator: "",
@@ -324,6 +332,7 @@ class _DashboardState extends State<Dashboard> {
                 if (flashSale != null)
                   BlocBuilder<ProductsBloc, ProductsState>(
                     builder: (context, state) {
+                      // * if the state of the products loading is loaded, display the flash sale products
                       if (state is ProductsLoaded) {
                         final filteredProducts = state.products
                             .where((product) =>
@@ -338,6 +347,7 @@ class _DashboardState extends State<Dashboard> {
                             runSpacing: 10,
                             children:
                                 List.generate(filteredProducts.length, (index) {
+                              // * should pass the discount percentage to the product card.
                               return ProductCard(
                                   discount: flashSale?.discountPercentage,
                                   product: filteredProducts[index]);
@@ -345,6 +355,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         );
                       } else if (state is ProductsLoading) {
+                        // * displays an empty container while products are loading
                         Container();
                       }
 

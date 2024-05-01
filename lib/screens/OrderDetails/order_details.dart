@@ -18,6 +18,7 @@ class OrderDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
+    // * getting the details extracted from the address format (recipient name, contact number & address)
     List<String> parts = order.address.split('-');
     String addressText = parts[0].trim();
     String details = parts[1].trim();

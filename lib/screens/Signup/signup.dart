@@ -25,11 +25,13 @@ class _SignupState extends State<Signup> {
 
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
+        // * if sign up success, navigate to login page.
         if (state is SignUpSuccess) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const Login()));
         }
 
+        // * if signup success using google or facebook, navigate to login page.
         if (state is AuthenticationAuthenticated) {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const Home()));

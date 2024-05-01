@@ -17,6 +17,7 @@ class _AddressFormState extends State<AddressForm> {
 
   @override
   Widget build(BuildContext context) {
+    // * device data to maintain responsiveness
     var deviceData = MediaQuery.of(context);
 
     return Scaffold(
@@ -376,6 +377,8 @@ class _AddressFormState extends State<AddressForm> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
+                            // * adding the given address to the currently logged user id.
+                            // * address format: address -name #phone number (eg: 20C Reid Avenue Road, California -John Doe #9819841471).
                             if (_formKey.currentState!.saveAndValidate()) {
                               String recipientName =
                                   _formKey.currentState!.value['name'];
@@ -400,6 +403,7 @@ class _AddressFormState extends State<AddressForm> {
 
                               String formattedAddress = '$address $details';
 
+                              // * calling the add address event in the user bloc.
                               context
                                   .read<UserBloc>()
                                   .add(AddAddress(formattedAddress));

@@ -61,6 +61,7 @@ class _FlashSaleFormState extends State<FlashSaleForm> {
                   child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  // * Flash sale discount
                   FormBuilderTextField(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     style: GoogleFonts.poppins(),
@@ -104,6 +105,7 @@ class _FlashSaleFormState extends State<FlashSaleForm> {
                   const SizedBox(
                     height: 20,
                   ),
+                  // * Flash sale end time
                   FormBuilderDateTimePicker(
                     name: "endDateTime",
                     inputType: InputType.both,
@@ -149,6 +151,7 @@ class _FlashSaleFormState extends State<FlashSaleForm> {
                       width: double.infinity,
                       child: TextButton(
                         onPressed: () async {
+                          // * adding the flash sale
                           if (_formKey.currentState!.saveAndValidate()) {
                             String discount =
                                 _formKey.currentState!.value["discount"];
@@ -165,6 +168,7 @@ class _FlashSaleFormState extends State<FlashSaleForm> {
                                 .read<FlashsaleBloc>()
                                 .add(AddFlashSaleEvent(flashSale));
 
+                            // * going back after he the addition
                             Navigator.of(context).pop();
                           }
                         },
