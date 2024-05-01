@@ -31,6 +31,7 @@ class _ProfileState extends State<Profile> {
   final ImagePicker _picker = ImagePicker();
   File? _avatarImage;
 
+  // * use to get first letter of the each word in user's display name.
   String getAvatarLetters(String name) {
     List<String> words = name.split(" ");
     String firstLetters = "";
@@ -88,6 +89,7 @@ class _ProfileState extends State<Profile> {
                 // * profile header
                 Row(
                   children: [
+                    // * if user has a image display it. Otherwise, display letters.
                     if (userLocal?.avatarURL != null &&
                         userLocal?.avatarURL != "")
                       Stack(
@@ -259,6 +261,7 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(
                       height: 10,
                     ),
+                    // * If the user is an admin, display all orders. Otherwise, display my orders.
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
@@ -292,6 +295,7 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 15,
                       ),
+                    // * shopping cart
                     if (userLocal!.role == "user")
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -322,6 +326,7 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 15,
                       ),
+                    // * if the user is an admin, display add a new product button.
                     if (userLocal!.role == "admin")
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -352,6 +357,7 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 15,
                       ),
+                    // * if the user is an admin, disolay manage flash sales button.
                     if (userLocal!.role == "admin")
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -384,6 +390,7 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 15,
                       ),
+                    // * if the user is an admin, disolay add a promo code button.
                     if (userLocal!.role == "admin")
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -412,6 +419,7 @@ class _ProfileState extends State<Profile> {
                       const SizedBox(
                         height: 15,
                       ),
+                    // * if the user is an admin, disolay add an admin button.
                     if (userLocal!.role == "admin")
                       GestureDetector(
                         behavior: HitTestBehavior.translucent,
@@ -566,6 +574,7 @@ class _ProfileState extends State<Profile> {
                             .read<AuthenticationBloc>()
                             .add(LogoutRequested(context));
 
+                        // * going back to login page after sign out.
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

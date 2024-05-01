@@ -21,11 +21,13 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormBuilderState>();
   String? errorMsg;
 
+  // * boolean to toggle password view button
   bool? _passwordVisible;
 
   @override
   void initState() {
     super.initState();
+    // * on the start, password will not be visible. But user can toggle it later.
     _passwordVisible = false;
   }
 
@@ -33,6 +35,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
+    // * bloc listener to actively listen about the current authenticatin state (authenticated, unauthenticated).
     return BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationAuthenticated) {

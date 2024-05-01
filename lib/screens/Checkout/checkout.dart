@@ -22,15 +22,21 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
+  // * Selected address & payment method values from the menus.
   String selectedAddress = "Select an Address";
   String selectedPaymentMethod = "Select a Payment Method";
+
+  // * total cost, discount, & shipping cost of the order. (Shipping cost is manually set to $30).
   double totalCost = 0;
   double discount = 0;
   double shippingCost = 30;
+
+  // * text controller to get the value of the user input for promo code.
   final promoCodeController = TextEditingController();
 
   bool totalFetched = false;
 
+  // * Apply selected address & payment method to variables.
   void applyAddress(String address) {
     setState(() {
       selectedAddress = address;
@@ -43,12 +49,17 @@ class _CheckoutState extends State<Checkout> {
     });
   }
 
+  // * applies the discount and update discount amount & total cost of the order.
   void applyDiscount(
       double totalCostInput, double shippingCost, String promoCode) async {
+    // * getting to know if the user has already used the promo code from firebase.
+    // * each promo code document in firebase has an array of used user ids.
     bool isUserHasUsedPromoCode =
         await widget.promoCodeService.hasUserUsedPromoCode(promoCode);
 
+    // * if user hasn't used the promo code already, apply the discount.
     if (!isUserHasUsedPromoCode) {
+      // * getting the discount value from the firebase. (10% = 0.1, 20% = 0.2)
       double promoCodeDiscount =
           await widget.promoCodeService.getDiscountAmount(promoCode);
 
@@ -62,6 +73,7 @@ class _CheckoutState extends State<Checkout> {
         totalCost = discountedTotalCost;
       });
 
+      // * adding the currently logged user id to the promo code in firebase.
       await widget.promoCodeService.usePromoCode(promoCode);
     }
   }
@@ -76,6 +88,7 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
     var deviceData = MediaQuery.of(context);
 
+    // * using to disable the pay button when user not selected any of address or payment method.
     bool isButtonDisable() {
       return selectedAddress == "Select an Address" ||
           selectedPaymentMethod == "Select a Payment Method";
@@ -134,6 +147,7 @@ class _CheckoutState extends State<Checkout> {
                         const SizedBox(
                           height: 15,
                         ),
+                        // * cart items
                         ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -167,8 +181,10 @@ class _CheckoutState extends State<Checkout> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            // * getting addresses for the current user
                             context.read<UserBloc>().add(FetchAddresses());
 
+                            // * bottom sheet to select address
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(),
@@ -242,6 +258,7 @@ class _CheckoutState extends State<Checkout> {
                           onTap: () {
                             context.read<UserBloc>().add(FetchAddresses());
 
+                            // * bottom sheet to select payment method
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(),
@@ -437,6 +454,8 @@ class _CheckoutState extends State<Checkout> {
                               onPressed: isButtonDisable()
                                   ? null
                                   : () async {
+                                      // * creating order object.
+                                      // * a map is used to add item id and their quantity.
                                       OrderLocal order = OrderLocal(
                                           customerId: FirebaseAuth
                                               .instance.currentUser!.uid,
@@ -461,6 +480,7 @@ class _CheckoutState extends State<Checkout> {
                                           .read<ShoppingCartBloc>()
                                           .add(ResetCartEvent());
 
+                                      // * navigate to order success page.
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

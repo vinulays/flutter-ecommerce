@@ -23,6 +23,7 @@ import 'package:readmore/readmore.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetails extends StatefulWidget {
+  // * initiating flash sale service.
   final FlashSaleService flashSaleService = FlashSaleService();
 
   ProductDetails({super.key});
@@ -32,10 +33,15 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  // * controller for the image caroussel.
   final controller = PageController(keepPage: true);
+
+  // * selected size value
   int? value;
+  // * selected color value
   int? colorValue;
 
+  // * current active flash sale
   FlashSale? flashSale;
 
   Future<void> getCurrentFlashSale() async {
@@ -46,6 +52,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     });
   }
 
+  // * add or remove the item in the wishlist.
   Future<bool?> _toggleWishlistProduct(
       BuildContext context, Product product, bool isLiked) async {
     try {
@@ -61,30 +68,38 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   void initState() {
     super.initState();
+    // * getting the active flash sale when the widget is initiating.
     getCurrentFlashSale();
   }
 
   @override
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
+    // * product object
     Product? product;
+
+    // * boolean use to know whether the user liked the product or not.
     bool isLiked = false;
 
     List<Container> pages = [];
 
+    // * use to disable to add to cart button if the user hasn't selected a color or a size.
     bool isButtonDisable() {
       return value == null || colorValue == null;
     }
 
+    // * checks whether the products is included in the flash sale.
     bool isProductInFlashSale() {
       return flashSale != null && flashSale!.productIds.contains(product!.id);
     }
 
+    // * add the product to the flash sale via flash sale service.
     void addToFlashSale() async {
       await widget.flashSaleService
           .addProductIdToFlashSale(flashSale!.id!, product!.id!);
     }
 
+    // * remove the product from the flash sale via flash sale service.
     void removeFromFlashSale() async {
       await widget.flashSaleService
           .removeProductFromFlashSale(flashSale!.id!, product!.id!);
@@ -92,9 +107,13 @@ class _ProductDetailsState extends State<ProductDetails> {
 
     return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
       builder: (context, state) {
+        // * when the state in the product details bloc is productLoaded, assign the loaded product to the variable.
+        // * should fetch the product before the page is calling.
         if (state is ProductLoaded) {
           product = state.product;
 
+          // * setting up pages list to display in the caroussel.
+          // * cached network image library is used to cache image data.
           pages = List.generate(
             product!.imageURLs.length,
             // ignore: avoid_unnecessary_containers
@@ -135,6 +154,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // * image caroussel.
                                 Stack(
                                   children: [
                                     SizedBox(
@@ -414,6 +434,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // * if there is a discount for the product, display it. otherwise, display normal price.
                                     if (flashSale != null &&
                                         flashSale!.productIds
                                             .contains(product!.id!))
@@ -469,6 +490,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     onPressed: isButtonDisable()
                                         ? null
                                         : () {
+                                            // * calling add to cart event.
                                             context
                                                 .read<ShoppingCartBloc>()
                                                 .add(
@@ -500,6 +522,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   ),
                                                 );
 
+                                            // * show add to cart success after addition.
                                             showModalBottomSheet(
                                                 shape:
                                                     const RoundedRectangleBorder(
@@ -888,6 +911,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ],
                 )
+              // * display loading circle until product is loaded.
               : (state is ProductLoading)
                   ? const Center(
                       child: CircularProgressIndicator(

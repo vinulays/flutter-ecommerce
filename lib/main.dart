@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // * bloc (business logic) providers to distribute the state among the application
         // * products bloc provider
         BlocProvider<ProductsBloc>(
           create: (context) => ProductsBloc(

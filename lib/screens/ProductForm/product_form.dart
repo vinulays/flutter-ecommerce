@@ -18,7 +18,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 class ProductForm extends StatefulWidget {
+  // * product object to update.
   final Product? product;
+  // * boolean to know whether the form is using to add the product or update the product.
   final bool isUpdate;
   const ProductForm({super.key, required this.isUpdate, this.product});
 
@@ -29,12 +31,16 @@ class ProductForm extends StatefulWidget {
 class _ProductFormState extends State<ProductForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
+  // * initiating flutter image picker library
   final ImagePicker _picker = ImagePicker();
 
+  // * controllers for size & color fields (used flutter multi select library)
   final MultiSelectController _sizeController = MultiSelectController();
   final MultiSelectController _colorController = MultiSelectController();
 
+  // * selected thumbnail images
   File? _thumbnailImage;
+  // * selected cover image list
   List<XFile> coverImages = [];
 
   // * for product updation
@@ -45,6 +51,7 @@ class _ProductFormState extends State<ProductForm> {
   void initState() {
     super.initState();
 
+    // * if the form is to update the product, preset all the form field values
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (widget.isUpdate && _formKey.currentState != null) {
         _formKey.currentState!.patchValue({
@@ -75,10 +82,12 @@ class _ProductFormState extends State<ProductForm> {
           ValueItem(label: 'Yellow', value: 'yellow'),
         ]);
 
+        // * presetting selected size values.
         List<ValueItem> selectedSizeOptions = _sizeController.options
             .where((option) => widget.product!.sizes.contains(option.value))
             .toList();
 
+        // * presetting selected color values.
         List<ValueItem> selectedColorOptions = _colorController.options
             .where((option) => widget.product!.colors.contains(option.value))
             .toList();
@@ -88,6 +97,7 @@ class _ProductFormState extends State<ProductForm> {
       }
     });
 
+    // * setting images URLs to display selected images (only in update form).
     if (widget.isUpdate) {
       thumbnailURL = widget.product!.thumbnailURL;
       imageURLs.addAll(widget.product!.imageURLs);
@@ -101,10 +111,12 @@ class _ProductFormState extends State<ProductForm> {
       setState(() {
         _thumbnailImage = File(pickedFile.path);
 
+        // * setting the form field value after the pick.
         _formKey.currentState?.fields["thumbnailImage"]
             ?.didChange(_thumbnailImage);
       });
     } else {
+      // * settting the form field value to null if the user didnt picked a file.
       if (!widget.isUpdate) {
         _formKey.currentState?.fields["thumbnailImage"]?.didChange(null);
       }

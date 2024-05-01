@@ -11,6 +11,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChangePasswordForm extends StatefulWidget {
+  // * Initiating the authentication service.
   final AuthService authService = AuthService(
       storage: FirebaseStorage.instance,
       firebaseAuth: FirebaseAuth.instance,
@@ -157,6 +158,8 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                         context.read<AuthenticationBloc>().add(
                             ChangePasswordEvent(currentPassword, newPassword));
 
+                        // * Navigating back to login page after changing the password.
+                        // * pushAndRemoveUntil() removes all the previous pages in the tree and makes the Login page the first page of the application.
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

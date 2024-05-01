@@ -6,6 +6,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChangeSettingsForm extends StatefulWidget {
+  // * Passing the values from previous screen to know which setting to change.
   final String userId;
   final String settingName;
   final String settingValue;
@@ -109,6 +110,7 @@ class _ChangeSettingsFormState extends State<ChangeSettingsForm> {
                   child: TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.saveAndValidate()) {
+                        // * If the setting name is 'Username', update the displauName of the currently logged user.
                         if (widget.settingName == "Username") {
                           String username =
                               _formKey.currentState!.value["Username"];
@@ -118,6 +120,7 @@ class _ChangeSettingsFormState extends State<ChangeSettingsForm> {
                               .add(ChangeUsernameEvent(username));
 
                           Navigator.of(context).pop();
+                          // * If the setting name is 'Phone number', update the phoneNumber of the currently logged user.
                         } else if (widget.settingName == "Phone number") {
                           String phoneNumber =
                               _formKey.currentState!.value["Phone number"];

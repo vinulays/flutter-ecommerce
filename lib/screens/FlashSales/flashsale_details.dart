@@ -25,6 +25,7 @@ class _FlashSaleDetailsState extends State<FlashSaleDetails> {
 
     return BlocBuilder<FlashsaleBloc, FlashsaleState>(
       builder: (context, state) {
+        // * when flash sale details are loaded, assign them to the sales list.
         if (state is FlashSalesLoaded) {
           flashSales = state.flashSales;
         }

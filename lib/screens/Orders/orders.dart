@@ -129,16 +129,20 @@ class _OrdersState extends State<Orders> {
                                         orders[index].productQuantityMap.length,
                                     itemBuilder:
                                         (BuildContext context, productIndex) {
+                                      // * getting product id from the map.
                                       final productId = orders[index]
                                           .productQuantityMap
                                           .keys
                                           .elementAt(productIndex);
+                                      // * getting product quantity for the product.
                                       final quantity = orders[index]
                                           .productQuantityMap[productId];
+                                      // * getting each product details from the firebase as a future.
                                       Future<Product> productFuture = widget
                                           .productService
                                           .getProductById(productId);
 
+                                      // * display the product details inside a future builder.
                                       return FutureBuilder(
                                           future: productFuture,
                                           builder: (context, snapshot) {

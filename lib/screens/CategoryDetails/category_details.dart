@@ -27,22 +27,28 @@ class CategoryDetails extends StatefulWidget {
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
+  // * Selected value of the dropdown menu
   String? selectedValue = "All items";
+
+  // * Lists of products in the category
   List<Product> products = [];
   List<Product> productsCopy = [];
+
+  // * boolean using to fetch the products from firestore only one time.
   bool productsFetched = false;
 
+  // * Selected values from the filter options
   String selectedAvailability = "";
   RangeValues selectedRangeValues = const RangeValues(100, 350);
 
   void applyFilters(String availability, RangeValues rangeValues) {
+    // * Set values from the filters
     setState(() {
       selectedAvailability = availability;
       selectedRangeValues = rangeValues;
     });
 
     // * Filtering by availability
-
     products = productsCopy.where((product) {
       if (selectedAvailability == "In Stock") {
         return product.isInStock;
@@ -58,6 +64,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           product.price <= rangeValues.end;
     }).toList();
 
+    // * Resetting the drop down menu to 'All times'
     selectedValue = "All items";
   }
 
@@ -65,6 +72,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
   Widget build(BuildContext context) {
     var deviceSize = MediaQuery.of(context).size;
 
+    // * Drop down menu items
     final List<String> items = [
       "All items",
       'New Arrival',
@@ -74,6 +82,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 
     return BlocBuilder<CategoryDetailsBloc, CategoryDetailsState>(
       builder: (context, state) {
+        // * Fetching & Setting category products using Category Bloc Provider.
+        // * Fetching should call before this page is rendered.
         if (state is CategoryLoaded && !productsFetched) {
           products = state.products;
           productsCopy = state.products;
@@ -149,6 +159,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                   value: selectedValue,
                                   onChanged: (value) {
                                     setState(() {
+                                      // * Sorting products based on the selected drop down menu.
                                       selectedValue = value;
                                       if (selectedValue ==
                                           'Price: Low to High') {
@@ -401,6 +412,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     )
                   ],
                 )
+              // * Displaying loading circle when category products are loading (state = CategoryLoading)
               : (state is CategoryLoading)
                   ? const Center(
                       child: CircularProgressIndicator(

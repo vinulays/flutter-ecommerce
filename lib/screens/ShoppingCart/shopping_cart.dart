@@ -7,6 +7,7 @@ import 'package:flutter_ecommerce/ui/cart_item_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ShoppingCart extends StatefulWidget {
+  // * fromWhere is used to display the back button if the user visited the cart from product detail & profile pages.
   final String fromWhere;
   const ShoppingCart({super.key, required this.fromWhere});
 
@@ -113,6 +114,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                     child: SizedBox(
                       width: double.infinity,
                       child: TextButton(
+                        // * navigating to checkout.
                         onPressed: (state is ShoppingCartLoadedState &&
                                 state.cart.items.isEmpty)
                             ? null

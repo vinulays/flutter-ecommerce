@@ -34,7 +34,7 @@ class _WelcomeState extends State<Welcome> {
               children: [
                 Text(
                   textAlign: TextAlign.center,
-                  "Choose you product",
+                  "Choose your product",
                   style: GoogleFonts.poppins(fontSize: 30),
                 ),
                 const SizedBox(
