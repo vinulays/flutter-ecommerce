@@ -308,18 +308,18 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             // * Count down timer
                             // * Duration = flash sale end time - current time
-                            SlideCountdownSeparated(
-                              padding: const EdgeInsets.all(4),
-                              separator: "",
-                              duration: Duration(
-                                  seconds: Jiffy.parse(
-                                          flashSale!.endDateTime.toString())
-                                      .diff(
-                                          Jiffy.parse(
-                                              DateTime.now().toString()),
-                                          unit: Unit.second)
-                                      .toInt()),
-                            ),
+                            // SlideCountdownSeparated(
+                            //   padding: const EdgeInsets.all(4),
+                            //   separator: "",
+                            //   duration: Duration(
+                            //       seconds: Jiffy.parse(
+                            //               flashSale!.endDateTime.toString())
+                            //           .diff(
+                            //               Jiffy.parse(
+                            //                   DateTime.now().toString()),
+                            //               unit: Unit.second)
+                            //           .toInt()),
+                            // ),
                           ],
                         )
                       ],

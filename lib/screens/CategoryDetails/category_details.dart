@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:flutter_ecommerce/screens/CategoryDetails/bloc/category_details_bloc.dart';
@@ -236,18 +237,23 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                           height: 20,
                         ),
                         // * category items
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: deviceSize.width * 0.05),
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            runSpacing: 10,
-                            children: List.generate(products.length, (index) {
-                              return ProductCard(product: products[index]);
-                            }),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: deviceSize.width * 0.05),
+                              child: Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                runSpacing: 10,
+                                children:
+                                    List.generate(products.length, (index) {
+                                  return ProductCard(product: products[index]);
+                                }),
+                              ),
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     Positioned.fill(
@@ -309,9 +315,9 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    borderRadius: const BorderRadius.only(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(30),
                                       bottomLeft: Radius.circular(30),
                                     ),
@@ -339,11 +345,11 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                       },
                                       icon: const Icon(
                                           Icons.filter_alt_outlined,
-                                          color: Colors.black),
+                                          color: Colors.white),
                                       label: Text(
                                         "Add Filter",
                                         style: GoogleFonts.poppins(
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w500),
                                       ),
                                     ),
