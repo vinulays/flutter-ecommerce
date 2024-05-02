@@ -481,7 +481,7 @@ class _ProfileState extends State<Profile> {
                             builder: (context) => ChangeSettingsForm(
                               userId: userLocal!.id!,
                               settingValue: userLocal!.displayName,
-                              settingName: "Name",
+                              settingName: "Username",
                             ),
                           ),
                         );
