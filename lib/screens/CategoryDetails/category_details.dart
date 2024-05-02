@@ -316,7 +316,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                               Expanded(
                                 child: Container(
                                   decoration: const BoxDecoration(
-                                    color: Colors.red,
+                                    color: Colors.grey,
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(30),
                                       bottomLeft: Radius.circular(30),
