@@ -16,6 +16,7 @@ import 'package:flutter_ecommerce/screens/Orders/bloc/orders_bloc.dart';
 import 'package:flutter_ecommerce/screens/Orders/orders.dart';
 import 'package:flutter_ecommerce/screens/ProductForm/product_form.dart';
 import 'package:flutter_ecommerce/screens/PromoCodeForm/promocode_form.dart';
+import 'package:flutter_ecommerce/screens/ShoppingCart/bloc/shopping_cart_bloc.dart';
 import 'package:flutter_ecommerce/screens/ShoppingCart/shopping_cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -570,6 +571,8 @@ class _ProfileState extends State<Profile> {
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
+                        context.read<ShoppingCartBloc>().add(ResetCartEvent());
+
                         context
                             .read<AuthenticationBloc>()
                             .add(LogoutRequested(context));
