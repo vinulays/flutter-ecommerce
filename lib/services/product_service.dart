@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 
 class ProductService {
   final FirebaseFirestore _firestore;
@@ -146,8 +147,13 @@ class ProductService {
         (formData["coverImages"] as List<XFile>).map(
           (coverImage) async {
             try {
+              String timestamp =
+                  DateTime.now().millisecondsSinceEpoch.toString();
+              String extension = path.extension(coverImage.path);
+              String filename = '$timestamp$extension';
+
               Reference ref =
-                  _storage.ref().child("productImages").child(coverImage.name);
+                  _storage.ref().child("productImages").child(filename);
 
               UploadTask uploadTask = ref.putFile(File(coverImage.path));
 
@@ -236,10 +242,11 @@ class ProductService {
 
   Future<String?> uploadImage(File imageFile) async {
     try {
-      Reference ref = _storage
-          .ref()
-          .child("productImages")
-          .child(imageFile.path.split('/').last);
+      String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      String extension = path.extension(imageFile.path);
+      String filename = '$timestamp$extension';
+
+      Reference ref = _storage.ref().child("productImages").child(filename);
 
       UploadTask uploadTask = ref.putFile(imageFile);
 
